@@ -1,185 +1,236 @@
-(() => {
-  const cfg = window.AGEX_CONFIG;
+/* =========================================================
+   AGEx CITY MAP — APP.JS (PHASE 2 FOUNDATION)
+   Purpose: Activate the Interactive City Nexus
+   ========================================================= */
 
-  // Bind persistent links
-  const applyBtn = document.getElementById("applyBtn");
+(() => {
+  /* -------------------------------
+     CONFIG + ELEMENT REFERENCES
+  -------------------------------- */
+  const cfg = window.AGEX_CONFIG;
+  if (!cfg) {
+    console.error("AGEX_CONFIG not found. Check config.js");
+    return;
+  }
+
+  const map        = document.getElementById("cityMap");
+  const applyBtn   = document.getElementById("applyBtn");
+  const overlay    = document.getElementById("overlay");
+  const ovClose    = document.getElementById("ovClose");
+  const ovIcon     = document.getElementById("ovIcon");
+  const ovTitle    = document.getElementById("ovTitle");
+  const ovPurpose  = document.getElementById("ovPurpose");
+  const ovQuote    = document.getElementById("ovQuote");
+  const ovVisit    = document.getElementById("ovVisit");
+  const ovCharter  = document.getElementById("ovCharter");
+
+  const tour       = document.getElementById("tour");
+  const tourTitle  = document.getElementById("tourTitle");
+  const tourBody   = document.getElementById("tourBody");
+  const tourNext   = document.getElementById("tourNext");
+  const tourSkip   = document.getElementById("tourSkip");
+
+  const soundBtn   = document.getElementById("soundBtn");
+  const chime      = document.getElementById("chime");
+
+  /* -------------------------------
+     CONSTANTS
+  -------------------------------- */
+  const TOUR_KEY  = "agex_city_tour_seen_v1";
+  const SOUND_KEY = "agex_sound_enabled_v1";
+
+  /* -------------------------------
+     APPLY GATE (GLOBAL)
+  -------------------------------- */
   applyBtn.href = cfg.applyUrl;
 
-  // Build nodes
-  const map = document.querySelector(".map");// ---- Plaza Beacon (inject once) ----
-if (map && !map.querySelector(".plazaBeacon")) {
-  const beacon = document.createElement("div");
-  beacon.className = "plazaBeacon";
-  beacon.setAttribute("aria-hidden", "true");
-  map.appendChild(beacon);
-}
-  cfg.districts.forEach(d => {
+  /* -------------------------------
+     SOUND SYSTEM (OPTIONAL)
+  -------------------------------- */
+  let soundEnabled = localStorage.getItem(SOUND_KEY) === "on";
+
+  function syncSoundUI() {
+    soundBtn.textContent = soundEnabled ? "🔔 Sound: On" : "🔇 Sound: Off";
+    soundBtn.setAttribute("aria-pressed", String(soundEnabled));
+  }
+
+  function playChime() {
+    if (!soundEnabled || !chime) return;
+    try {
+      chime.currentTime = 0;
+      chime.play();
+    } catch (e) {}
+  }
+
+  soundBtn.addEventListener("click", () => {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem(SOUND_KEY, soundEnabled ? "on" : "off");
+    syncSoundUI();
+    if (soundEnabled) playChime();
+  });
+
+  syncSoundUI();
+
+  /* -------------------------------
+     PLAZA BEACON (INJECT ONCE)
+  -------------------------------- */
+  if (map && !map.querySelector(".plazaBeacon")) {
+    const beacon = document.createElement("div");
+    beacon.className = "plazaBeacon";
+    beacon.setAttribute("aria-hidden", "true");
+    map.appendChild(beacon);
+  }
+
+  /* -------------------------------
+     BUILD DISTRICT NODES
+  -------------------------------- */
+  cfg.districts.forEach(district => {
     const node = document.createElement("div");
     node.className = "node";
-    node.style.left = d.x;
-    node.style.top  = d.y;
-    node.setAttribute("data-id", d.id);
+    node.setAttribute("role", "button");
+    node.setAttribute("tabindex", "0");
+    node.setAttribute("aria-label", district.name);
+
+    // Desktop positioning (mobile ignores this)
+    if (district.x && district.y) {
+      node.style.left = district.x;
+      node.style.top  = district.y;
+    }
+
     node.innerHTML = `
       <div class="nodeTop">
-        <div class="nodeIcon">${d.icon}</div>
-        <div class="nodeName">${d.name}</div>
+        <div class="nodeIcon">${district.icon}</div>
+        <div class="nodeName">${district.name}</div>
       </div>
-      <div class="nodeOne">${d.one}</div>
+      <div class="nodeOne">${district.one}</div>
     `;
-    node.addEventListener("click", () => openOverlay(d.id, true));
-    node.addEventListener("mouseenter", () => playChime());
+
+    node.addEventListener("click", () => openOverlay(district));
+    node.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") openOverlay(district);
+    });
+    node.addEventListener("mouseenter", playChime);
+
     map.appendChild(node);
   });
 
-  // Overlay refs
-  const overlay = document.getElementById("overlay");
-  const ovClose = document.getElementById("ovClose");
-  const ovIcon = document.getElementById("ovIcon");
-  const ovTitle = document.getElementById("ovTitle");
-  const ovPurpose = document.getElementById("ovPurpose");
-  const ovQuote = document.getElementById("ovQuote");
-  const ovVisit = document.getElementById("ovVisit");
-  const ovCharter = document.getElementById("ovCharter");
+  /* -------------------------------
+     OVERLAY CONTROL
+  -------------------------------- */
+  function openOverlay(d) {
+    // Close tour if active (never compete)
+    if (tour && tour.classList.contains("open")) {
+      closeTour(false);
+    }
 
-  function openOverlay(id, focusCharterBtn){
-  const d = cfg.districts.find(x => x.id === id);
-  if (!d) return;
+    ovIcon.textContent    = d.icon;
+    ovTitle.textContent   = d.name;
+    ovPurpose.textContent = d.one;
+    ovQuote.textContent   = `“${d.quote}”`;
 
-  // ✅ If tour is open, close it (tour should never compete with overlay)
-  const tour = document.getElementById("tour");
-  if (tour && tour.classList.contains("open")) {
-    tour.classList.remove("open");
-    tour.setAttribute("aria-hidden","true");
-    // do NOT mark as seen; user can still see tour next visit if you want
+    ovVisit.href   = d.url;
+    ovCharter.href = cfg.charterUrl;
+
+    overlay.classList.add("open");
+    overlay.setAttribute("aria-hidden", "false");
+    ovCharter.focus();
   }
 
-  ovIcon.textContent = d.icon;
-  ovTitle.textContent = d.name;
-  ovPurpose.textContent = d.one;
-  ovQuote.textContent = `“${d.quote}”`;
-
-  ovVisit.href = d.url;
-  ovCharter.href = cfg.charterUrl;
-
-  overlay.classList.add("open");
-  overlay.setAttribute("aria-hidden","false");
-
-  if (focusCharterBtn) ovCharter.focus();
-}
-
-
-  function closeOverlay(){
+  function closeOverlay() {
     overlay.classList.remove("open");
-    overlay.setAttribute("aria-hidden","true");
+    overlay.setAttribute("aria-hidden", "true");
   }
 
   ovClose.addEventListener("click", closeOverlay);
-  overlay.addEventListener("click", (e) => { if(e.target === overlay) closeOverlay(); });
-  document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeOverlay(); });
+  overlay.addEventListener("click", e => {
+    if (e.target === overlay) closeOverlay();
+  });
 
-  // Tour
-  const tour = document.getElementById("tour");
-  const tourTitle = document.getElementById("tourTitle");
-  const tourBody = document.getElementById("tourBody");
-  const tourNext = document.getElementById("tourNext");
-  const tourSkip = document.getElementById("tourSkip");
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && overlay.classList.contains("open")) {
+      closeOverlay();
+    }
+  });
 
-  const TOUR_KEY = "agex_city_tour_v1";
-  const steps = [
+  /* -------------------------------
+     GUIDED WALKTHROUGH (RITUAL)
+  -------------------------------- */
+  const tourSteps = [
     {
       title: "Welcome, Steward.",
-      body: "This is AGEx—an integrated ecosystem built on the principle of Stewardship. You are not browsing links. You are entering a city."
+      body: "This is AGEx — an integrated ecosystem built on the principle of Stewardship. You are not browsing links. You are entering a city."
     },
     {
-      title: "Explore the Districts.",
-      body: "Each district is a pillar of the build. Tap any district to open its dossier—no page reload, no noise."
+      title: "The Constitution.",
+      body: "Every city stands on law. The Charter is our constitution. Understanding comes before access."
     },
     {
-      title: "Begin with the Constitution.",
-      body: "Your journey begins with understanding. Open the Charter District, then choose “Read The Charter.”"
-    },
-    {
-      title: "The Gate is Always Visible.",
-      body: "When you are ready to build with us, apply for stewardship. The gate remains on every screen."
+      title: "The Gate.",
+      body: "When you are ready to build, the gate is always visible. Approach it with intention."
     }
   ];
-  let step = 0;
 
-  function openTour(){
+  let tourIndex = 0;
+
+  function openTour() {
     tour.classList.add("open");
-    tour.setAttribute("aria-hidden","false");
+    tour.setAttribute("aria-hidden", "false");
     renderTour();
   }
-  function closeTour(){
+
+  function closeTour(markSeen = true) {
     tour.classList.remove("open");
-    tour.setAttribute("aria-hidden","true");
-    localStorage.setItem(TOUR_KEY, "seen");
+    tour.setAttribute("aria-hidden", "true");
+    if (markSeen) localStorage.setItem(TOUR_KEY, "seen");
   }
-  function renderTour(){
-    tourTitle.textContent = steps[step].title;
-    tourBody.textContent = steps[step].body;
 
-    // Emphasize actions by step
-    if (step === 2) {
-      // gently nudge charter overlay opening after a short pause
-      setTimeout(() => openOverlay("charter", true), 550);
+  function renderTour() {
+    const step = tourSteps[tourIndex];
+    tourTitle.textContent = step.title;
+    tourBody.textContent  = step.body;
+
+    tourNext.textContent =
+      tourIndex === tourSteps.length - 1 ? "Enter the City" : "Next";
+  }
+
+  tourNext.addEventListener("click", () => {
+    if (tourIndex < tourSteps.length - 1) {
+      tourIndex++;
+      renderTour();
+    } else {
+      // Final ritual emphasis on the Gate
+      applyBtn.classList.add("gatePing");
+      setTimeout(() => applyBtn.classList.remove("gatePing"), 950);
+      closeTour(true);
     }
-    if (step === 3) {
-      applyBtn.classList.add("pulse");
-      setTimeout(() => applyBtn.classList.remove("pulse"), 1200);
-    }
-    tourNext.textContent = (step === steps.length - 1) ? "Finish" : "Next";
-  }
-tourNext.addEventListener("click", () => {
-  if (step < steps.length - 1) {
-    step++;
-    renderTour();
-  } else {
-    // Final blessing: highlight the Gate once, then close
-    applyBtn.classList.add("gatePing");
-    setTimeout(() => applyBtn.classList.remove("gatePing"), 950);
-    closeTour();
-  }
-});
-
- if // Sound (optional)
-  const chime = document.getElementById("chime");
-  const soundBtn = document.getElementById("soundBtn");
-  const SOUND_KEY = "agex_sound_v1";
-  let soundOn = localStorage.getItem(SOUND_KEY) === "on";
-
-  function syncSoundUI(){
-    soundBtn.setAttribute("aria-pressed", String(soundOn));
-    soundBtn.textContent = soundOn ? "🔔 Sound: On" : "🔇 Sound: Off";
-  }
-  function playChime(){
-    if (!soundOn) return;
-    if (!chime || !chime.src) return;
-    chime.currentTime = 0;
-    chime.play().catch(()=>{});
-  }
-  soundBtn.addEventListener("click", () => {
-    soundOn = !soundOn;
-    localStorage.setItem(SOUND_KEY, soundOn ? "on" : "off");
-    syncSoundUI();
-    if (soundOn) playChime();
   });
-  syncSoundUI();
 
-  // Schema JSON-LD
+  tourSkip.addEventListener("click", () => closeTour(true));
+
+  // Auto-start tour once, after a short pause
+  if (!localStorage.getItem(TOUR_KEY)) {
+    setTimeout(openTour, 900);
+  }
+
+  /* -------------------------------
+     SCHEMA.ORG (SEO / SEMANTIC)
+  -------------------------------- */
   const schemaEl = document.getElementById("orgSchema");
-  const schema = {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"AGEx | Arin’s Global Exchange",
-    "url": location.origin + location.pathname,
-    "description":"The integrated ecosystem for the new steward. Building dwellings against the horns.",
-    "department": cfg.districts.map(d => ({
-      "@type":"Organization",
-      "name": d.name,
-      "description": d.one,
-      "url": d.url
-    }))
-  };
-  schemaEl.textContent = JSON.stringify(schema);
+  if (schemaEl) {
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "AGEx | Arin’s Global Exchange",
+      "description": "The integrated ecosystem for the new steward. Building dwellings against the horns.",
+      "url": window.location.href,
+      "department": cfg.districts.map(d => ({
+        "@type": "Organization",
+        "name": d.name,
+        "description": d.one,
+        "url": d.url
+      }))
+    };
+    schemaEl.textContent = JSON.stringify(schema);
+  }
+
 })();

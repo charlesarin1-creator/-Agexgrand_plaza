@@ -221,3 +221,6 @@ h1{
     padding-bottom: 92px; /* so content doesn't hide behind fixed gate */
   }
 }
+@media (max-width: 760px){
+  .tourCard{ margin-bottom: 80px; }
+}

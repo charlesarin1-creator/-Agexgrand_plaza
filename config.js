@@ -20,7 +20,7 @@ window.AGEX_CONFIG = {
       name:"The Financial Lodge",
       one:"The inner circle where capital is disciplined and money becomes a tool, not a master.",
       quote:"Money is a tool. Stewardship is the craft.",
-      url:"https://charlesarin101.github.io/agexsmartmoneyhub/lodge.html?v=2",
+      url:"https://charlesarin101.github.io/agex-smartmoneyhub/",
       x:"58%", y:"14%"
     },
     {

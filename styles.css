@@ -224,3 +224,79 @@ h1{
 @media (max-width: 760px){
   .tourCard{ margin-bottom: 80px; }
 }
+/* ===========================
+   PHASE 2.5 — CITY BEACON + PLAZA BREATH
+   Paste at bottom of styles.css
+=========================== */
+
+/* Make the plaza feel alive (subtle) */
+.map:before{
+  animation: plazaBreath 10.5s ease-in-out infinite;
+}
+
+@keyframes plazaBreath{
+  0%, 60% { opacity: .55; transform: scale(1); }
+  75%     { opacity: .78; transform: scale(1.02); }
+  100%    { opacity: .55; transform: scale(1); }
+}
+
+/* The central beacon (a quiet "you are here" signal) */
+.plazaBeacon{
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(243,219,122,.95);
+  box-shadow:
+    0 0 0 6px rgba(212,175,55,.10),
+    0 0 30px rgba(212,175,55,.22),
+    0 18px 40px rgba(0,0,0,.35);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.plazaBeacon:before{
+  content:"";
+  position:absolute;
+  inset:-22px;
+  border-radius: 999px;
+  border: 1px solid rgba(212,175,55,.22);
+  opacity: .55;
+  animation: beaconRing 8.8s ease-in-out infinite;
+}
+
+@keyframes beaconRing{
+  0%, 72%  { transform: scale(.78); opacity: .22; }
+  82%      { transform: scale(1.05); opacity: .55; }
+  92%      { transform: scale(1.22); opacity: .10; }
+  100%     { transform: scale(.78); opacity: .22; }
+}
+/* ===========================
+   SOVEREIGN GATE POLISH
+=========================== */
+
+/* Gate breath: mostly still, brief dignified pulse every cycle */
+#applyBtn{
+  animation: gateBreath 9.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes gateBreath{
+  0%, 82%   { transform: translateY(0) scale(1); filter: none; }
+  88%       { transform: translateY(-1px) scale(1.02); filter: drop-shadow(0 10px 20px rgba(212,175,55,.20)); }
+  92%       { transform: translateY(0) scale(1.01); filter: drop-shadow(0 14px 26px rgba(212,175,55,.18)); }
+  100%      { transform: translateY(0) scale(1); filter: none; }
+}
+
+/* “Final ritual” ping at tour end */
+#applyBtn.gatePing{
+  animation: gatePing 900ms ease-out 1;
+}
+@keyframes gatePing{
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.05); filter: drop-shadow(0 18px 30px rgba(212,175,55,.28)); }
+  100% { transform: scale(1); filter: none; }
+}

@@ -130,17 +130,19 @@ if (map && !map.querySelector(".plazaBeacon")) {
     }
     tourNext.textContent = (step === steps.length - 1) ? "Finish" : "Next";
   }
+tourNext.addEventListener("click", () => {
+  if (step < steps.length - 1) {
+    step++;
+    renderTour();
+  } else {
+    // Final blessing: highlight the Gate once, then close
+    applyBtn.classList.add("gatePing");
+    setTimeout(() => applyBtn.classList.remove("gatePing"), 950);
+    closeTour();
+  }
+});
 
-  tourNext.addEventListener("click", () => {
-    if (step < steps.length - 1) { step++; renderTour(); }
-    else closeTour();
-  });
-  tourSkip.addEventListener("click", closeTour);
-
-  // Auto-run tour once
-  if (!localStorage.getItem(TOUR_KEY)) openTour();
-
-  // Sound (optional)
+ if // Sound (optional)
   const chime = document.getElementById("chime");
   const soundBtn = document.getElementById("soundBtn");
   const SOUND_KEY = "agex_sound_v1";

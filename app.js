@@ -36,21 +36,31 @@
   const ovCharter = document.getElementById("ovCharter");
 
   function openOverlay(id, focusCharterBtn){
-    const d = cfg.districts.find(x => x.id === id);
-    if (!d) return;
+  const d = cfg.districts.find(x => x.id === id);
+  if (!d) return;
 
-    ovIcon.textContent = d.icon;
-    ovTitle.textContent = d.name;
-    ovPurpose.textContent = d.one;
-    ovQuote.textContent = `“${d.quote}”`;
-
-    ovVisit.href = d.url;
-    ovCharter.href = cfg.charterUrl;
-
-    overlay.classList.add("open");
-    overlay.setAttribute("aria-hidden","false");
-    if (focusCharterBtn) ovCharter.focus();
+  // ✅ If tour is open, close it (tour should never compete with overlay)
+  const tour = document.getElementById("tour");
+  if (tour && tour.classList.contains("open")) {
+    tour.classList.remove("open");
+    tour.setAttribute("aria-hidden","true");
+    // do NOT mark as seen; user can still see tour next visit if you want
   }
+
+  ovIcon.textContent = d.icon;
+  ovTitle.textContent = d.name;
+  ovPurpose.textContent = d.one;
+  ovQuote.textContent = `“${d.quote}”`;
+
+  ovVisit.href = d.url;
+  ovCharter.href = cfg.charterUrl;
+
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden","false");
+
+  if (focusCharterBtn) ovCharter.focus();
+}
+
 
   function closeOverlay(){
     overlay.classList.remove("open");

@@ -173,3 +173,17 @@ h1{
   opacity: .9;
   pointer-events:none;
 }
+/* ===== Overlay button hard-fix (prevents purple/underline fallback) ===== */
+.overlay a { 
+  color: inherit !important; 
+  text-decoration: none !important; 
+}
+
+.ovActions a.btn{
+  color: rgba(233,241,255,.95) !important;
+  text-decoration: none !important;
+}
+
+.ovActions a.btn.secondary{
+  color: rgba(233,241,255,.90) !important;
+}

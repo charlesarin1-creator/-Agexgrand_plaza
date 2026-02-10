@@ -187,3 +187,15 @@ h1{
 .ovActions a.btn.secondary{
   color: rgba(233,241,255,.90) !important;
 }
+/* ===== District interactivity cues ===== */
+.node{
+  -webkit-tap-highlight-color: transparent;
+}
+
+.node:active{
+  transform: translateY(-1px) scale(0.99);
+}
+
+.node:hover .nodeIcon{
+  filter: drop-shadow(0 6px 18px rgba(212,175,55,.22));
+}

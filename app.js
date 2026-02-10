@@ -6,7 +6,13 @@
   applyBtn.href = cfg.applyUrl;
 
   // Build nodes
-  const map = document.querySelector(".map");
+  const map = document.querySelector(".map");// ---- Plaza Beacon (inject once) ----
+if (map && !map.querySelector(".plazaBeacon")) {
+  const beacon = document.createElement("div");
+  beacon.className = "plazaBeacon";
+  beacon.setAttribute("aria-hidden", "true");
+  map.appendChild(beacon);
+}
   cfg.districts.forEach(d => {
     const node = document.createElement("div");
     node.className = "node";

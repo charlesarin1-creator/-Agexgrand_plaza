@@ -1,79 +1,210 @@
-/* ===========================
-   AGEx POLISH PATCH (ADD-ON)
-   Paste this at the bottom of styles.css
-=========================== */
+/* =========================================================
+   AGEx CITY MAP — styles.css (Clean Phase-2 Architecture)
+   ========================================================= */
 
-/* Smoother text + layout stability */
+:root{
+  --bg0:#030713;
+  --bg1:#050b16;
+  --bg2:#07152e;
+
+  --ink:#e9f1ff;
+  --muted:rgba(233,241,255,.74);
+
+  --gold:#d4af37;
+  --gold2:#f3db7a;
+
+  --panel: rgba(7,18,40,.84);
+  --panel2: rgba(7,18,40,.72);
+
+  --line: rgba(255,255,255,.10);
+  --lineGold: rgba(212,175,55,.30);
+
+  --shadow: 0 18px 55px rgba(0,0,0,.55);
+  --radius: 20px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
 body{
+  margin:0;
+  color:var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", sans-serif;
+  background:
+    radial-gradient(1200px 700px at 15% 10%, rgba(212,175,55,.10), transparent 55%),
+    radial-gradient(1200px 700px at 85% 20%, rgba(64,150,255,.12), transparent 55%),
+    linear-gradient(160deg, var(--bg1), var(--bg2));
+  overflow-x:hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-.hero{
-  padding-top: 18px;
+a{color:inherit; text-decoration:none}
+button{font-family:inherit}
+::selection{background: rgba(212,175,55,.22)}
+
+/* Background blueprint grid */
+.bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.72;
+  background:
+    radial-gradient(900px 520px at 50% 35%, rgba(212,175,55,.10), transparent 60%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.028) 0 1px, transparent 1px 90px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 90px);
 }
 
+/* =========================================================
+   TOPBAR (Persistent)
+   ========================================================= */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  background: linear-gradient(180deg, rgba(4,10,22,.92), rgba(4,10,22,.62));
+  border-bottom:1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+}
+
+.brand{display:flex; gap:12px; align-items:center}
+.brandLogo{
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  object-fit:cover;
+  border:1px solid rgba(212,175,55,.28);
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+.brandText{line-height:1.06}
+.brandKicker{
+  font-weight:950;
+  letter-spacing:.08em;
+  color:var(--gold2);
+  text-transform:uppercase;
+}
+.brandSub{font-size:.92rem; color:rgba(233,241,255,.78)}
+
+.topbarRight{display:flex; align-items:center; gap:10px}
+
+/* Buttons */
+.ghost{
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.05);
+  color:rgba(233,241,255,.92);
+  cursor:pointer;
+}
+
+.apply{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid rgba(212,175,55,.50);
+  background: linear-gradient(180deg, rgba(212,175,55,.28), rgba(212,175,55,.12));
+  box-shadow: 0 12px 26px rgba(0,0,0,.35);
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  position:relative;
+  transition: transform .16s ease, filter .16s ease;
+}
+
+.apply:hover{transform: translateY(-1px)}
+.apply:before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:16px;
+  background: radial-gradient(closest-side at 50% 50%, rgba(243,219,122,.22), transparent 72%);
+  opacity:.85;
+  pointer-events:none;
+}
+
+/* Gate breath (subtle, periodic) */
+#applyBtn{
+  transform-origin:center;
+  animation: gateBreath 9.5s ease-in-out infinite;
+}
+@keyframes gateBreath{
+  0%, 82% { transform: translateY(0) scale(1); filter:none; }
+  88%     { transform: translateY(-1px) scale(1.02); filter: drop-shadow(0 10px 20px rgba(212,175,55,.20)); }
+  92%     { transform: translateY(0) scale(1.01); filter: drop-shadow(0 14px 26px rgba(212,175,55,.18)); }
+  100%    { transform: translateY(0) scale(1); filter:none; }
+}
+#applyBtn.gatePing{animation: gatePing 900ms ease-out 1;}
+@keyframes gatePing{
+  0% { transform: scale(1); }
+  45%{ transform: scale(1.05); filter: drop-shadow(0 18px 30px rgba(212,175,55,.28)); }
+  100%{ transform: scale(1); filter:none; }
+}
+
+/* =========================================================
+   PLAZA
+   ========================================================= */
+.plaza{
+  max-width:1100px;
+  margin:0 auto;
+  padding:26px 16px 40px;
+}
+
+.hero{padding:18px 0 10px}
 h1{
-  letter-spacing: .03em;
-  text-transform: uppercase;
+  margin:0;
+  font-size: clamp(1.6rem, 3.4vw, 3rem);
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.mantra{
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  max-width: 70ch;
 }
 
-/* Topbar: cleaner + compact on mobile */
-@media (max-width: 760px){
-  .topbar{
-    position: sticky;
-    top: 0;
-    padding: 10px 12px;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+/* =========================================================
+   CITY MAP
+   ========================================================= */
+.mapWrap{margin-top:20px}
 
-  .brandLogo{
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-  }
-
-  .brandKicker{
-    font-size: .95rem;
-  }
-
-  .brandSub{
-    font-size: .88rem;
-  }
-
-  .topbarRight{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  #soundBtn{
-    flex: 0 0 auto;
-    padding: 10px 10px;
-    border-radius: 14px;
-  }
-
-  .apply{
-    flex: 1;
-    text-align: center;
-    white-space: nowrap;
-    padding: 12px 10px;
-    border-radius: 14px;
-    font-weight: 900;
-    letter-spacing: .04em;
-  }
-}
-
-/* Map: more “city model” vibe */
 .map{
+  position:relative;
+  border-radius: 26px;
+  padding:22px;
+  min-height: 420px;
   background:
     radial-gradient(900px 420px at 50% 35%, rgba(212,175,55,.10), transparent 62%),
     linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: var(--shadow);
+  overflow:hidden;
 }
 
+/* Plaza breath (very subtle) */
+.map:before{
+  content:"";
+  position:absolute;
+  inset:-120px;
+  background: radial-gradient(closest-side at 50% 40%, rgba(212,175,55,.12), transparent 60%);
+  pointer-events:none;
+  opacity:.55;
+  animation: plazaBreath 10.5s ease-in-out infinite;
+}
+@keyframes plazaBreath{
+  0%, 60% { opacity: .55; transform: scale(1); }
+  75%     { opacity: .78; transform: scale(1.02); }
+  100%    { opacity: .55; transform: scale(1); }
+}
+
+/* Inner border */
 .map:after{
   content:"";
   position:absolute;
@@ -83,220 +214,300 @@ h1{
   pointer-events:none;
 }
 
-/* Nodes: stronger card style + clearer hierarchy */
-.node{
-  backdrop-filter: blur(10px);
-}
-
-.nodeName{
-  font-size: 1.02rem;
-  font-weight: 950;
-}
-
-.nodeOne{
-  line-height: 1.35;
-}
-
-/* Mobile “district towers”: premium stack */
-@media (max-width: 760px){
-  .map{
-    padding: 12px;
-  }
-
-  .node{
-    position: relative;
-    left: auto !important;
-    top: auto !important;
-    width: 100%;
-    margin-bottom: 12px;
-    padding: 14px 14px;
-    border-radius: 18px;
-    background: linear-gradient(180deg, rgba(7,18,40,.94), rgba(7,18,40,.78));
-    border: 1px solid rgba(212,175,55,.30);
-  }
-
-  .node:hover{
-    transform: none;
-  }
-
-  .nodeTop{
-    align-items: center;
-  }
-
-  .nodeIcon{
-    font-size: 1.6rem;
-  }
-
-  .nodeName{
-    font-size: 1.08rem;
-  }
-
-  .nodeOne{
-    font-size: .96rem;
-  }
-
-  .mobileHint{
-    display:none;
-  }
-}
-
-/* Overlay: more authority */
-.overlayCard{
-  border: 1px solid rgba(212,175,55,.32);
-}
-
-.ovTitle{
-  letter-spacing: .02em;
-}
-
-.ovQuote{
-  border-left: 3px solid rgba(212,175,55,.85);
-}
-
-/* Footer seal: tighten */
-.sealTitle{
-  text-transform: uppercase;
-  letter-spacing: .10em;
-}
-
-/* Apply button: subtle premium glow */
-.apply{
-  position: relative;
-}
-
-.apply:before{
-  content:"";
-  position:absolute;
-  inset:-1px;
-  border-radius: 14px;
-  background: radial-gradient(closest-side at 50% 50%, rgba(243,219,122,.22), transparent 70%);
-  opacity: .9;
-  pointer-events:none;
-}
-/* ===== Overlay button hard-fix (prevents purple/underline fallback) ===== */
-.overlay a { 
-  color: inherit !important; 
-  text-decoration: none !important; 
-}
-
-.ovActions a.btn{
-  color: rgba(233,241,255,.95) !important;
-  text-decoration: none !important;
-}
-
-.ovActions a.btn.secondary{
-  color: rgba(233,241,255,.90) !important;
-}
-/* ===== District interactivity cues ===== */
-.node{
-  -webkit-tap-highlight-color: transparent;
-}
-
-.node:active{
-  transform: translateY(-1px) scale(0.99);
-}
-
-.node:hover .nodeIcon{
-  filter: drop-shadow(0 6px 18px rgba(212,175,55,.22));
-}
-/* ===== Mobile Sovereign Gate (bottom fixed) ===== */
-@media (max-width: 760px){
-  #applyBtn{
-    position: fixed;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    z-index: 100;
-    padding: 14px 14px;
-    border-radius: 16px;
-    font-weight: 950;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    background: linear-gradient(180deg, rgba(212,175,55,.30), rgba(212,175,55,.14));
-    border: 1px solid rgba(212,175,55,.55);
-    box-shadow: 0 18px 40px rgba(0,0,0,.45);
-  }
-
-  .plaza{
-    padding-bottom: 92px; /* so content doesn't hide behind fixed gate */
-  }
-}
-@media (max-width: 760px){
-  .tourCard{ margin-bottom: 80px; }
-}
-/* ===========================
-   PHASE 2.5 — CITY BEACON + PLAZA BREATH
-   Paste at bottom of styles.css
-=========================== */
-
-/* Make the plaza feel alive (subtle) */
-.map:before{
-  animation: plazaBreath 10.5s ease-in-out infinite;
-}
-
-@keyframes plazaBreath{
-  0%, 60% { opacity: .55; transform: scale(1); }
-  75%     { opacity: .78; transform: scale(1.02); }
-  100%    { opacity: .55; transform: scale(1); }
-}
-
-/* The central beacon (a quiet "you are here" signal) */
+/* Beacon (injected by JS) */
 .plazaBeacon{
-  position: absolute;
-  left: 50%;
-  top: 44%;
+  position:absolute;
+  left:50%;
+  top:44%;
   transform: translate(-50%, -50%);
   width: 14px;
   height: 14px;
-  border-radius: 999px;
+  border-radius:999px;
   background: rgba(243,219,122,.95);
   box-shadow:
     0 0 0 6px rgba(212,175,55,.10),
     0 0 30px rgba(212,175,55,.22),
     0 18px 40px rgba(0,0,0,.35);
-  pointer-events: none;
-  z-index: 2;
+  pointer-events:none;
+  z-index:2;
 }
-
 .plazaBeacon:before{
   content:"";
   position:absolute;
   inset:-22px;
-  border-radius: 999px;
-  border: 1px solid rgba(212,175,55,.22);
-  opacity: .55;
+  border-radius:999px;
+  border:1px solid rgba(212,175,55,.22);
+  opacity:.55;
   animation: beaconRing 8.8s ease-in-out infinite;
 }
-
 @keyframes beaconRing{
-  0%, 72%  { transform: scale(.78); opacity: .22; }
-  82%      { transform: scale(1.05); opacity: .55; }
-  92%      { transform: scale(1.22); opacity: .10; }
-  100%     { transform: scale(.78); opacity: .22; }
-}
-/* ===========================
-   SOVEREIGN GATE POLISH
-=========================== */
-
-/* Gate breath: mostly still, brief dignified pulse every cycle */
-#applyBtn{
-  animation: gateBreath 9.5s ease-in-out infinite;
-  transform-origin: center;
+  0%, 72% { transform: scale(.78); opacity:.22; }
+  82%     { transform: scale(1.05); opacity:.55; }
+  92%     { transform: scale(1.22); opacity:.10; }
+  100%    { transform: scale(.78); opacity:.22; }
 }
 
-@keyframes gateBreath{
-  0%, 82%   { transform: translateY(0) scale(1); filter: none; }
-  88%       { transform: translateY(-1px) scale(1.02); filter: drop-shadow(0 10px 20px rgba(212,175,55,.20)); }
-  92%       { transform: translateY(0) scale(1.01); filter: drop-shadow(0 14px 26px rgba(212,175,55,.18)); }
-  100%      { transform: translateY(0) scale(1); filter: none; }
+.mobileHint{
+  margin-top:10px;
+  color:rgba(233,241,255,.62);
+  font-size:.92rem;
 }
 
-/* “Final ritual” ping at tour end */
-#applyBtn.gatePing{
-  animation: gatePing 900ms ease-out 1;
+/* District Nodes */
+.node{
+  position:absolute;
+  width: 230px;
+  padding:14px;
+  border-radius: 18px;
+  background: var(--panel);
+  border:1px solid rgba(212,175,55,.22);
+  box-shadow: 0 18px 40px rgba(0,0,0,.40);
+  cursor:pointer;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, filter .18s ease;
+  -webkit-tap-highlight-color: transparent;
+  backdrop-filter: blur(10px);
 }
-@keyframes gatePing{
-  0%   { transform: scale(1); }
-  45%  { transform: scale(1.05); filter: drop-shadow(0 18px 30px rgba(212,175,55,.28)); }
-  100% { transform: scale(1); filter: none; }
+.node:hover{
+  transform: translateY(-3px);
+  border-color: rgba(212,175,55,.52);
+  background: rgba(7,18,40,.90);
+}
+.node:active{transform: translateY(-1px) scale(.99)}
+
+.nodeTop{display:flex; gap:10px; align-items:center}
+.nodeIcon{
+  font-size:1.55rem;
+  filter: drop-shadow(0 10px 22px rgba(0,0,0,.25));
+}
+.node:hover .nodeIcon{
+  filter: drop-shadow(0 10px 22px rgba(212,175,55,.22));
+}
+.nodeName{
+  font-weight:950;
+  letter-spacing:.02em;
+  font-size:1.02rem;
+}
+.nodeOne{
+  color:rgba(233,241,255,.78);
+  margin-top:8px;
+  font-size:.92rem;
+  line-height:1.35;
+}
+
+/* =========================================================
+   FOOTER SEAL
+   ========================================================= */
+.footer{margin-top:16px}
+.sealRow{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:14px;
+  border-radius: 20px;
+  border:1px solid rgba(212,175,55,.18);
+  background: rgba(255,255,255,.04);
+}
+.seal{
+  width:56px;
+  height:56px;
+  border-radius:14px;
+  object-fit:cover;
+  border:1px solid rgba(212,175,55,.28);
+}
+.sealTitle{
+  font-weight:950;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  color:var(--gold2);
+}
+.sealSub{
+  color:rgba(233,241,255,.72);
+  font-size:.92rem;
+}
+
+/* =========================================================
+   OVERLAY (District Modal)
+   ========================================================= */
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:60;
+  display:none;
+  place-items:center;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  padding: 18px;
+}
+.overlay.open{display:grid}
+
+.overlayCard{
+  width:min(680px, 100%);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(7,18,40,.94), rgba(7,18,40,.80));
+  border:1px solid rgba(212,175,55,.32);
+  box-shadow: 0 25px 70px rgba(0,0,0,.65);
+  padding: 18px;
+  position:relative;
+  animation: pop .18s ease-out;
+}
+@keyframes pop{
+  from{transform:translateY(10px); opacity:.6}
+  to{transform:translateY(0); opacity:1}
+}
+
+.ovClose{
+  position:absolute;
+  top:10px;
+  right:10px;
+  border:none;
+  background: rgba(255,255,255,.06);
+  color:rgba(233,241,255,.92);
+  border-radius:12px;
+  padding:10px 12px;
+  cursor:pointer;
+}
+
+.ovHeader{display:flex; gap:12px; align-items:center; padding-right:52px}
+.ovIcon{font-size:2rem}
+.ovTitle{font-weight:950; font-size:1.4rem; letter-spacing:.02em}
+.ovPurpose{color:rgba(233,241,255,.78); margin-top:2px}
+
+.ovQuote{
+  margin:14px 0 18px;
+  padding:14px;
+  border-left:3px solid rgba(212,175,55,.85);
+  background: rgba(255,255,255,.04);
+  border-radius: 14px;
+  color:rgba(233,241,255,.92);
+}
+
+/* Overlay actions: harden link styling to never go purple */
+.overlay a{
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid rgba(212,175,55,.45);
+  background: linear-gradient(180deg, rgba(212,175,55,.18), rgba(212,175,55,.08));
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  transition: transform .16s ease;
+}
+.btn:hover{transform: translateY(-1px)}
+.btn.secondary{
+  border-color: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+}
+
+.ovActions{display:flex; gap:10px; flex-wrap:wrap}
+.ovFoot{margin-top:12px}
+.muted{color:rgba(233,241,255,.62)}
+
+/* =========================================================
+   TOUR (Guided Walkthrough)
+   ========================================================= */
+.tour{
+  position:fixed;
+  inset:0;
+  z-index:70;
+  display:none;
+  place-items:center;
+  background: rgba(0,0,0,.50);
+  backdrop-filter: blur(8px);
+  padding: 18px;
+}
+.tour.open{display:grid}
+
+.tourCard{
+  width:min(560px, 100%);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(7,18,40,.96), rgba(7,18,40,.82));
+  border:1px solid rgba(212,175,55,.30);
+  box-shadow: 0 25px 70px rgba(0,0,0,.65);
+  padding: 18px;
+}
+.tourTitle{font-weight:950; font-size:1.15rem; letter-spacing:.02em}
+.tourBody{
+  margin-top:10px;
+  color:rgba(233,241,255,.82);
+  line-height:1.5;
+}
+.tourActions{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:14px;
+}
+
+/* =========================================================
+   MOBILE SOVEREIGNTY
+   ========================================================= */
+@media (max-width: 760px){
+  .topbar{
+    padding:10px 12px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .brandLogo{width:38px; height:38px}
+  .brandSub{font-size:.88rem}
+
+  .topbarRight{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+  }
+
+  #soundBtn{
+    flex:0 0 auto;
+    padding:10px 10px;
+    border-radius:14px;
+  }
+
+  /* Apply becomes bottom-fixed gate on mobile */
+  #applyBtn{
+    position:fixed;
+    left:12px;
+    right:12px;
+    bottom:12px;
+    z-index:80;
+    padding:14px 14px;
+    border-radius:16px;
+    box-shadow: 0 18px 40px rgba(0,0,0,.45);
+  }
+
+  .plaza{
+    padding-bottom: 92px; /* prevent content under gate */
+  }
+
+  .map{
+    min-height:auto;
+    padding:12px;
+  }
+
+  /* Nodes stack like towers */
+  .node{
+    position:relative;
+    left:auto !important;
+    top:auto !important;
+    width:100%;
+    margin-bottom:12px;
+    background: linear-gradient(180deg, rgba(7,18,40,.94), rgba(7,18,40,.78));
+    border: 1px solid rgba(212,175,55,.30);
+  }
+  .node:hover{transform:none}
+  .nodeName{font-size:1.08rem}
+  .nodeOne{font-size:.96rem}
+
+  .mobileHint{display:none}
+
+  .tourCard{ margin-bottom: 80px; } /* keep tour above the fixed gate */
 }

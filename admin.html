@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="theme-color" content="#0B3D2E"/>
+  <title>AGEx Admin Console</title>
+  <style>
+    :root{--green:#0B3D2E;--gold:#F4B41A;--bg:#F7FAF9;--card:#fff;--line:rgba(0,0,0,.10);--ink:#111;--muted:#666;}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink);}
+    .wrap{max-width:860px;margin:0 auto;padding:18px;}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;}
+    h1,h2{margin:0 0 8px;color:var(--green);}
+    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+    label{display:block;font-weight:800;font-size:12px;margin-top:10px}
+    input,select,textarea{width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);margin-top:6px;font-family:inherit}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:10px 14px;border:1px solid var(--line);background:#fff;font-weight:900;cursor:pointer}
+    .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.6)}
+    .btn.dark{background:var(--green);color:#fff;border-color:transparent}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:800;font-size:12px}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;font-size:13px}
+    th{font-size:12px;color:#444}
+    code{background:#fff;border:1px solid var(--line);padding:2px 6px;border-radius:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>AGEx Admin Console</h1>
+      <p class="muted">
+        Phase 1 access control (static site): generate keys, share keys, manage cohort list.
+        Keys are stored on <b>your device only</b>.
+      </p>
+      <div class="row">
+        <a class="btn" href="app.html">← Back to App</a>
+        <a class="btn" href="https://charlesarin101.github.io/agexsmartmoneyhub/lodge.html?v=2" target="_blank" rel="noopener">Open Lodge Gate</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Generate a Learner Key</h2>
+
+      <label for="name">Learner Name (or WhatsApp name)</label>
+      <input id="name" placeholder="e.g., Musa A." />
+
+      <div class="row">
+        <div style="flex:1;min-width:220px">
+          <label for="level">Assign Level</label>
+          <select id="level">
+            <option value="FOUNDATION">FOUNDATION (21 Days)</option>
+            <option value="APPRENTICE">LEVEL 1 (90 Days)</option>
+            <option value="BUILDER">LEVEL 2</option>
+            <option value="CONTRIBUTOR">LEVEL 3</option>
+            <option value="OPERATOR">LEVEL 4</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <label for="expiry">Expiry (optional)</label>
+          <select id="expiry">
+            <option value="none">No expiry</option>
+            <option value="7">7 days</option>
+            <option value="30">30 days</option>
+            <option value="365">365 days</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <button class="btn gold" id="genBtn">Generate Key</button>
+        <button class="btn" id="clearBtn">Clear All (admin device)</button>
+      </div>
+
+      <div style="margin-top:12px">
+        <span class="pill">Your latest key:</span>
+        <div id="latest" style="margin-top:8px;font-weight:900;font-size:16px;color:var(--green)">—</div>
+        <p class="muted" id="latestMeta"></p>
+        <button class="btn dark" id="copyBtn" style="display:none">Copy Key Message</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Issued Keys (stored on this device)</h2>
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Level</th>
+              <th>Key</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="muted">
+        Note: since we’re static, keys are not centrally stored. This is Phase 1.
+        Phase 2 will move this to a proper database + login.
+      </p>
+    </div>
+  </div>
+
+<script>
+  const KEY = "AGEX_ADMIN_KEYS_V1";
+  const lodgeUrl = "https://charlesarin101.github.io/agexsmartmoneyhub/lodge.html?v=2";
+
+  function load(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || "[]"); }catch(e){ return []; }
+  }
+  function save(list){
+    localStorage.setItem(KEY, JSON.stringify(list));
+  }
+
+  function makeKey(){
+    // human-friendly but hard to guess
+    const part = () => Math.random().toString(36).slice(2,6).toUpperCase();
+    return "AGEX-" + part() + "-" + part() + "-" + String(Date.now()).slice(-4);
+  }
+
+  function render(){
+    const list = load();
+    const rows = document.getElementById("rows");
+    rows.innerHTML = "";
+    list.slice().reverse().forEach(item=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(item.name || "—")}</td>
+        <td>${escapeHtml(item.level)}</td>
+        <td><code>${escapeHtml(item.key)}</code></td>
+        <td>${item.revoked ? "Revoked" : "Active"}</td>
+      `;
+      rows.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  let latestKey = null;
+
+  document.getElementById("genBtn").addEventListener("click", ()=>{
+    const name = document.getElementById("name").value.trim();
+    const level = document.getElementById("level").value;
+    const expiry = document.getElementById("expiry").value;
+
+    const key = makeKey();
+    const createdAt = Date.now();
+    const expiresAt = expiry === "none" ? null : createdAt + (parseInt(expiry,10) * 24 * 60 * 60 * 1000);
+
+    const list = load();
+    list.push({ name, level, key, createdAt, expiresAt, revoked:false });
+    save(list);
+
+    latestKey = {name, level, key, expiresAt};
+    document.getElementById("latest").textContent = key;
+    document.getElementById("latestMeta").textContent = `${name ? "For: " + name + " · " : ""}Level: ${level}${expiresAt ? " · Expires: " + new Date(expiresAt).toLocaleDateString() : ""}`;
+    document.getElementById("copyBtn").style.display = "inline-flex";
+
+    render();
+  });
+
+  document.getElementById("copyBtn").addEventListener("click", async ()=>{
+    if(!latestKey) return;
+
+    const msg =
+`AGEx Smart Money Hub — Lodge Access Key
+
+Name: ${latestKey.name || "—"}
+Level: ${latestKey.level}
+
+Your key: ${latestKey.key}
+
+Step 1) Open the Lodge Gate:
+${lodgeUrl}
+
+Step 2) Paste the key exactly (case-sensitive) and enter.
+
+— Charles Arin`;
+
+    try{
+      await navigator.clipboard.writeText(msg);
+      alert("Copied. Paste to WhatsApp now.");
+    }catch(e){
+      alert("Copy failed. Manually select the text from your latest key and send it.");
+    }
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", ()=>{
+    if(confirm("Clear all admin keys stored on this device?")){
+      localStorage.removeItem(KEY);
+      latestKey = null;
+      document.getElementById("latest").textContent = "—";
+      document.getElementById("latestMeta").textContent = "";
+      document.getElementById("copyBtn").style.display = "none";
+      render();
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>

@@ -15,6 +15,7 @@
   <style>
     :root{
       --green:#0B3D2E;
+      --green2:#083326;
       --gold:#F4B41A;
       --bg:#F7FAF9;
       --card:#FFFFFF;
@@ -22,11 +23,11 @@
       --muted:#5F6B66;
       --line:rgba(15,15,15,.10);
       --shadow:0 18px 45px rgba(0,0,0,.10);
-      --radius:18px;
-      --max:1200px;
+      --radius:20px;
+      --max:1100px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0}
+    html,body{margin:0;padding:0;height:100%}
     body{
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
       color:var(--ink);
@@ -34,14 +35,13 @@
         radial-gradient(900px 600px at 15% 0%, rgba(244,180,26,.12), transparent 65%),
         radial-gradient(900px 600px at 85% 10%, rgba(11,61,46,.10), transparent 62%),
         var(--bg);
-      overflow:hidden; /* keeps layout stable */
     }
     a{color:inherit;text-decoration:none}
 
-    /* Top Bar */
+    /* Topbar */
     .topbar{
       position:sticky;top:0;z-index:60;
-      background:rgba(247,250,249,.95);
+      background:rgba(247,250,249,.92);
       backdrop-filter:saturate(180%) blur(10px);
       border-bottom:1px solid var(--line);
     }
@@ -54,19 +54,15 @@
       justify-content:space-between;
       gap:12px;
     }
-    .brand{
-      display:flex;align-items:center;gap:10px;
-      min-width:220px;
-    }
+    .brand{display:flex;align-items:center;gap:10px}
     .mark{
-      width:38px;height:38px;border-radius:12px;
+      width:40px;height:40px;border-radius:14px;
       display:grid;place-items:center;
-      background:linear-gradient(135deg,var(--green),#083326);
+      background:linear-gradient(135deg,var(--green),var(--green2));
       box-shadow:0 10px 22px rgba(11,61,46,.22);
-      flex:0 0 auto;
     }
     .brand b{letter-spacing:.2px}
-    .brand .sub{font-size:12px;color:rgba(15,15,15,.62);font-weight:800}
+    .sub{font-size:12px;color:rgba(15,15,15,.62);font-weight:800}
     .pill{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 12px;border-radius:999px;
@@ -75,12 +71,9 @@
       font-weight:800;
       font-size:12px;
       color:rgba(15,15,15,.72);
-      max-width:520px;
+      white-space:nowrap;
     }
-    .pill .dot{
-      width:10px;height:10px;border-radius:99px;background:var(--gold);
-      box-shadow:0 0 0 4px rgba(244,180,26,.16)
-    }
+    .pill .dot{width:10px;height:10px;border-radius:99px;background:var(--gold);box-shadow:0 0 0 4px rgba(244,180,26,.16)}
     .btn{
       display:inline-flex;align-items:center;justify-content:center;
       padding:10px 14px;border-radius:999px;
@@ -93,73 +86,122 @@
     .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.65)}
     .btn.ghost{background:transparent}
 
-    /* Main Layout */
+    /* App layout: NAV TOP + FRAME BOTTOM */
     .wrap{
-      height:calc(100vh - 62px);
       max-width:var(--max);
       margin:0 auto;
-      padding:12px 14px 14px;
+      padding:14px;
       display:flex;
       flex-direction:column;
-      gap:12px;
+      gap:14px;
+      min-height:calc(100vh - 64px);
     }
 
-    /* NAV ALWAYS VISIBLE (TOP) */
-    .navPanel{
+    .panel{
       background:var(--card);
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       overflow:hidden;
     }
+
+    /* NAV panel takes at most ~1/3 of screen */
+    .navPanel{
+      max-height:34vh;        /* <= one third */
+      overflow:auto;          /* scroll only inside nav panel if needed */
+    }
     .navHead{
-      padding:12px 14px;
+      padding:14px 14px 10px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
       border-bottom:1px solid var(--line);
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
       background:#fff;
     }
-    .navHead b{color:var(--green)}
-    .navHead .hint{font-size:12px;color:rgba(15,15,15,.62);font-weight:800}
+    .navHead h1{
+      margin:0;
+      font-size:18px;
+      color:var(--green);
+      letter-spacing:-.2px;
+    }
+    .navHead p{
+      margin:6px 0 0;
+      color:rgba(15,15,15,.62);
+      font-weight:700;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .navHeadRight{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
 
+    /* Compact grid */
     .navGrid{
       padding:12px 14px;
       display:grid;
       gap:10px;
-      grid-template-columns:repeat(3, minmax(0, 1fr));
+      grid-template-columns:repeat(3, minmax(0, 1fr)); /* 9 items => 3x3 perfect */
     }
-    .navBtn{
-      width:100%;
-      text-align:left;
-      padding:12px 12px;
-      border-radius:14px;
+
+    .tile{
       border:1px solid var(--line);
       background:#fff;
-      font-weight:900;
+      border-radius:16px;
+      padding:10px 10px;
       cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
+      min-height:54px;
       transition:.12s ease;
     }
-    .navBtn small{font-weight:800;color:rgba(15,15,15,.55)}
-    .navBtn.active{
-      border-color:rgba(244,180,26,.75);
+    .tile:hover{transform:translateY(-1px)}
+    .tile.active{
+      border-color:rgba(244,180,26,.70);
       box-shadow:0 10px 22px rgba(244,180,26,.18);
     }
-    .navBtn:hover{transform:translateY(-1px)}
-
-    /* Frame */
-    .framePanel{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
+    .tile .left{
       display:flex;
       flex-direction:column;
-      min-height: 0; /* important for flex iframe */
+      gap:2px;
+      min-width:0;
+    }
+    .tile .name{
+      font-weight:950;
+      color:#111;
+      font-size:13px;
+      line-height:1.15;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .tile .tag{
+      font-weight:850;
+      color:rgba(15,15,15,.55);
+      font-size:11px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .tile .chev{
+      font-weight:950;
+      color:rgba(11,61,46,.85);
+      opacity:.8;
+      flex:0 0 auto;
+    }
+
+    /* Frame panel gets the rest */
+    .framePanel{
       flex:1;
+      display:flex;
+      flex-direction:column;
+      min-height:52vh;
     }
     .frameTop{
       padding:12px 14px;
@@ -170,33 +212,43 @@
       gap:12px;
       background:#fff;
     }
-    .frameTitle{
-      display:flex;flex-direction:column;gap:4px;
+    .frameTop .title{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
       min-width:0;
     }
-    .frameTitle b{color:var(--green)}
-    .frameTitle span{
-      font-size:12px;color:rgba(15,15,15,.6);font-weight:750;
-      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-      max-width:70vw;
+    .frameTop .title b{color:var(--green)}
+    .frameTop .title span{
+      font-size:12px;
+      color:rgba(15,15,15,.60);
+      font-weight:750;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:72vw;
     }
-    .frameActions{display:flex;gap:10px;flex-wrap:wrap}
-
+    .frameBtns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
     iframe{
       width:100%;
-      border:0;
       flex:1;
+      border:0;
       background:#fff;
     }
 
-    /* Mobile */
-    @media (max-width: 980px){
-      .pill{display:none}
+    /* Mobile: 2 columns for comfort */
+    @media (max-width: 720px){
       .navGrid{grid-template-columns:repeat(2, minmax(0, 1fr))}
-      .frameTitle span{max-width:62vw}
+      .navPanel{max-height:38vh}
     }
     @media (max-width: 420px){
       .navGrid{grid-template-columns:1fr}
+      .frameTop .title span{max-width:62vw}
     }
   </style>
 </head>
@@ -218,81 +270,130 @@
       </div>
 
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
-        <div class="pill"><span class="dot"></span> Navigation is always visible. Content opens below.</div>
+        <div class="pill"><span class="dot"></span> Tap a district. It opens below.</div>
         <button class="btn gold" id="installBtn" style="display:none">Install App</button>
+        <a class="btn ghost" href="./" title="Open original plaza page">Open Plaza</a>
       </div>
     </div>
   </div>
 
   <div class="wrap">
-    <!-- NAV (TOP) -->
-    <section class="navPanel" aria-label="AGEx City Map">
+
+    <!-- NAV TOP -->
+    <section class="panel navPanel" aria-label="City map navigation">
       <div class="navHead">
         <div>
-          <b>The City Map</b>
-          <span class="hint">Tap a district. It opens below.</span>
+          <h1>The City Map</h1>
+          <p>Choose your next district. The page loads in the display area below.</p>
         </div>
-        <button class="btn ghost" id="openNewTabBtn" type="button">Open current in new tab</button>
+        <div class="navHeadRight">
+          <button class="btn" id="openNewTabBtnTop" type="button">Open current in new tab</button>
+        </div>
       </div>
 
       <div class="navGrid" id="nav">
-        <!-- IMPORTANT:
-             mode="frame" opens inside the app
-             mode="newtab" opens outside the app (more reliable for some sites)
+
+        <!-- ORDERED FOR LEARNERS -->
+        <button class="tile active" data-url="https://charlesarin101.github.io/agexsmartmoneyhub/" data-title="Smart Money Hub" data-tag="Academy">
+          <span class="left">
+            <span class="name">Smart Money Hub</span>
+            <span class="tag">Academy</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <button class="tile" data-url="https://charlesarin101.github.io/agexsmartmoneyhub/lodge.html?v=2" data-title="Steward’s Lodge Gate" data-tag="Enter">
+          <span class="left">
+            <span class="name">Steward’s Lodge Gate</span>
+            <span class="tag">Enter</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <button class="tile" data-url="https://charlesarin101.github.io/the-stewards-charter/" data-title="The Steward’s Charter" data-tag="Finance">
+          <span class="left">
+            <span class="name">The Steward’s Charter</span>
+            <span class="tag">Finance</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <button class="tile" data-url="https://charlesarin101.github.io/Income_streams_lab/" data-title="Income Streams Lab" data-tag="Lab">
+          <span class="left">
+            <span class="name">Income Streams Lab</span>
+            <span class="tag">Lab</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <button class="tile" data-url="https://charlesarin1-creator.github.io/the-stigweards-provisions/" data-title="The Stigweard’s Provision" data-tag="Provision">
+          <span class="left">
+            <span class="name">The Stigweard’s Provision</span>
+            <span class="tag">Provision</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <button class="tile" data-url="https://selfany.com/s/arinsglobalmarketplace" data-title="Arin’s Global Marketplace" data-tag="Store">
+          <span class="left">
+            <span class="name">Arin’s Global Marketplace</span>
+            <span class="tag">Store</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <button class="tile" data-url="https://charlesarin1-creator.github.io/bigsharks-site/" data-title="BigSharks" data-tag="Project">
+          <span class="left">
+            <span class="name">BigSharks</span>
+            <span class="tag">Project</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <button class="tile" data-url="https://charlesarin101.github.io/christianchildacademy_zaria/" data-title="Christian Child Academy" data-tag="Education">
+          <span class="left">
+            <span class="name">Christian Child Academy</span>
+            <span class="tag">Education</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <button class="tile" data-url="./" data-title="Grand Plaza" data-tag="Home">
+          <span class="left">
+            <span class="name">Grand Plaza</span>
+            <span class="tag">Home</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
+
+        <!-- OPTIONAL ADMIN TILE (hidden unless you unlock it below)
+        <button class="tile" data-url="admin.html" data-title="Admin Console" data-tag="Keys" id="adminTile">
+          <span class="left">
+            <span class="name">Admin Console</span>
+            <span class="tag">Keys</span>
+          </span>
+          <span class="chev">›</span>
+        </button>
         -->
 
-        <button class="navBtn active" data-label="Grand Plaza (Home)" data-url="plaza.html" data-mode="frame">
-          Grand Plaza <small>Home</small>
-        </button>
-
-        <button class="navBtn" data-label="Smart Money Hub" data-url="https://charlesarin101.github.io/agexsmartmoneyhub/" data-mode="frame">
-          Smart Money Hub <small>Academy</small>
-        </button>
-
-        <button class="navBtn" data-label="Steward’s Lodge Gate" data-url="https://charlesarin101.github.io/agexsmartmoneyhub/lodge.html?v=2" data-mode="newtab">
-          Steward’s Lodge Gate <small>Enter</small>
-        </button>
-
-        <button class="navBtn" data-label="The Steward’s Charter" data-url="https://charlesarin101.github.io/the-stewards-charter/" data-mode="frame">
-          The Steward’s Charter <small>Finance</small>
-        </button>
-
-        <button class="navBtn" data-label="The Stigweard’s Provision" data-url="https://charlesarin1-creator.github.io/the-stigweards-provisions/" data-mode="frame">
-          The Stigweard’s Provision <small>Provision</small>
-        </button>
-
-        <button class="navBtn" data-label="Arin’s Global Marketplace" data-url="https://selfany.com/s/arinsglobalmarketplace" data-mode="newtab">
-          Arin’s Global Marketplace <small>Store</small>
-        </button>
-
-        <button class="navBtn" data-label="Christian Child Academy" data-url="https://charlesarin101.github.io/christianchildacademy_zaria/" data-mode="frame">
-          Christian Child Academy <small>Education</small>
-        </button>
-
-        <button class="navBtn" data-label="Income Streams Lab" data-url="https://charlesarin101.github.io/Income_streams_lab/" data-mode="frame">
-          Income Streams Lab <small>Lab</small>
-        </button>
-
-        <button class="navBtn" data-label="BigSharks" data-url="https://charlesarin1-creator.github.io/bigsharks-site/" data-mode="frame">
-          BigSharks <small>Project</small>
-        </button>
       </div>
     </section>
 
-    <!-- CONTENT (BELOW) -->
-    <section class="framePanel" aria-label="AGEx Content Viewer">
+    <!-- DISPLAY DOWN -->
+    <section class="panel framePanel" aria-label="Display area">
       <div class="frameTop">
-        <div class="frameTitle">
-          <b id="frameTitle">Grand Plaza</b>
+        <div class="title">
+          <b id="frameTitle">Smart Money Hub</b>
           <span id="frameSub">Loading…</span>
         </div>
-        <div class="frameActions">
+        <div class="frameBtns">
           <button class="btn" id="refreshBtn" type="button">Refresh</button>
+          <button class="btn" id="openNewTabBtn" type="button">Open current in new tab</button>
         </div>
       </div>
-
-      <iframe id="frame" title="AGEx Content" loading="lazy"></iframe>
+      <iframe id="frame" title="AGEx Content"></iframe>
     </section>
+
   </div>
 
 <script>
@@ -312,82 +413,75 @@
     installBtn.style.display = "none";
   });
 
-  // ===== Navigation =====
+  // ===== App Shell Navigation =====
   const nav = document.getElementById("nav");
   const frame = document.getElementById("frame");
   const frameTitle = document.getElementById("frameTitle");
   const frameSub = document.getElementById("frameSub");
-
-  const stateKey = "AGEX_APP_LAST_TARGET_V2";
+  const stateKey = "AGEX_APP_LAST_URL";
 
   function setActive(btn){
-    [...nav.querySelectorAll("button.navBtn")].forEach(b => b.classList.remove("active"));
+    [...nav.querySelectorAll("button.tile")].forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
   }
 
-  function setFrame(url, label){
+  function setFrame(url, title, tag){
     frame.src = url;
-    frameTitle.textContent = label || "AGEx";
-    frameSub.textContent = url;
-  }
-
-  function go(btn){
-    const url = btn.getAttribute("data-url");
-    const label = btn.getAttribute("data-label") || btn.textContent.replace(/\s+/g," ").trim();
-    const mode = (btn.getAttribute("data-mode") || "frame").toLowerCase();
-
-    setActive(btn);
-
-    // Save the selection
-    localStorage.setItem(stateKey, JSON.stringify({url, label, mode}));
-
-    if(mode === "newtab"){
-      // Open externally, keep current frame unchanged (avoids iframe restrictions)
-      window.open(url, "_blank", "noopener");
-      frameSub.textContent = "Opened in new tab: " + url;
-      frameTitle.textContent = label;
-      return;
-    }
-
-    setFrame(url, label);
+    frameTitle.textContent = title || "AGEx";
+    frameSub.textContent = tag ? (tag + " • " + url) : url;
+    localStorage.setItem(stateKey, url);
   }
 
   nav.addEventListener("click", (e)=>{
-    const btn = e.target.closest("button.navBtn");
+    const btn = e.target.closest("button.tile[data-url]");
     if(!btn) return;
-    go(btn);
+    const url = btn.getAttribute("data-url");
+    const title = btn.getAttribute("data-title") || "AGEx";
+    const tag = btn.getAttribute("data-tag") || "";
+    setActive(btn);
+    setFrame(url, title, tag);
   });
+
+  function openCurrent(){
+    const url = frame.src || localStorage.getItem(stateKey) || "https://charlesarin101.github.io/agexsmartmoneyhub/";
+    window.open(url, "_blank", "noopener");
+  }
+
+  document.getElementById("openNewTabBtn").addEventListener("click", openCurrent);
+  document.getElementById("openNewTabBtnTop").addEventListener("click", openCurrent);
 
   document.getElementById("refreshBtn").addEventListener("click", ()=>{
     try{ frame.contentWindow.location.reload(); }catch(e){ frame.src = frame.src; }
   });
 
-  document.getElementById("openNewTabBtn").addEventListener("click", ()=>{
-    const url = frame.src || "";
-    if(!url) return;
-    window.open(url, "_blank", "noopener");
-  });
+  // ===== Admin visibility (optional) =====
+  // If you later want Admin inside the app, uncomment the Admin tile in HTML,
+  // then require a local unlock on YOUR device only:
+  // localStorage.setItem("AGEX_ADMIN_OK","1");
+  // and only then show the tile.
+  // const adminTile = document.getElementById("adminTile");
+  // if(adminTile){
+  //   adminTile.style.display = (localStorage.getItem("AGEX_ADMIN_OK")==="1") ? "flex" : "none";
+  // }
 
-  // ===== First load =====
-  // IMPORTANT: you must create plaza.html (see note below)
-  const fallback = { url: "plaza.html", label: "Grand Plaza (Home)", mode: "frame" };
+  // ===== Load last visited or default =====
+  const defaultUrl = "https://charlesarin101.github.io/agexsmartmoneyhub/";
+  const last = localStorage.getItem(stateKey) || defaultUrl;
 
-  let last = null;
-  try{ last = JSON.parse(localStorage.getItem(stateKey) || "null"); }catch(e){ last = null; }
-  const start = (last && last.url) ? last : fallback;
+  const match = [...nav.querySelectorAll("button.tile[data-url]")].find(b => b.getAttribute("data-url") === last);
+  if(match){
+    setActive(match);
+    setFrame(last, match.getAttribute("data-title"), match.getAttribute("data-tag"));
+  }else{
+    const first = nav.querySelector("button.tile[data-url]");
+    setActive(first);
+    setFrame(first.getAttribute("data-url"), first.getAttribute("data-title"), first.getAttribute("data-tag"));
+  }
 
-  // highlight matching button if possible
-  const match = [...nav.querySelectorAll("button.navBtn")]
-    .find(b => b.getAttribute("data-url") === start.url);
-
-  if(match) go(match);
-  else setFrame(start.url, start.label);
-
-  // ===== Service Worker registration =====
+  // ===== Service Worker =====
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
   }
 </script>
-
 </body>
 </html>

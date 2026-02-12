@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0B3D2E" />
+  <title>AGEx — Grand Plaza (App)</title>
+  <meta name="description" content="AGEx Grand Plaza — the app-body for the ecosystem. Enter once. Navigate everything." />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+
+  <style>
+    :root{
+      --green:#0B3D2E;
+      --gold:#F4B41A;
+      --bg:#F7FAF9;
+      --card:#FFFFFF;
+      --ink:#0F0F0F;
+      --muted:#5F6B66;
+      --line:rgba(15,15,15,.10);
+      --radius:18px;
+      --shadow:0 18px 45px rgba(0,0,0,.10);
+      --max:1200px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%}
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 600px at 15% 0%, rgba(244,180,26,.12), transparent 65%),
+        radial-gradient(900px 600px at 85% 10%, rgba(11,61,46,.10), transparent 62%),
+        var(--bg);
+    }
+    a{color:inherit;text-decoration:none}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(247,250,249,.92);
+      backdrop-filter:saturate(180%) blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar .inner{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+    }
+    .mark{
+      width:38px;height:38px;border-radius:12px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--green),#083326);
+      box-shadow:0 10px 22px rgba(11,61,46,.22);
+    }
+    .brand b{letter-spacing:.2px}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:800;
+      font-size:12px;
+      color:rgba(15,15,15,.72);
+    }
+    .pill .dot{width:10px;height:10px;border-radius:99px;background:var(--gold);box-shadow:0 0 0 4px rgba(244,180,26,.16)}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;
+      border:1px solid var(--line);
+      font-weight:900;
+      background:#fff;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.65)}
+    .btn.ghost{background:transparent}
+    .layout{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:14px;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:14px;
+      min-height:calc(100vh - 62px);
+    }
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .side{
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .side h1{
+      margin:0;
+      font-size:18px;
+      color:var(--green);
+      letter-spacing:-.2px;
+    }
+    .side .muted{
+      margin:0;
+      color:rgba(15,15,15,.62);
+      font-weight:700;
+      font-size:13px;
+      line-height:1.45;
+    }
+    .nav{
+      display:flex;flex-direction:column;gap:8px;
+      margin-top:6px;
+    }
+    .nav button{
+      width:100%;
+      text-align:left;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:900;
+      cursor:pointer;
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;
+    }
+    .nav button.active{
+      border-color:rgba(244,180,26,.65);
+      box-shadow:0 10px 22px rgba(244,180,26,.18);
+    }
+    .nav small{font-weight:800;color:rgba(15,15,15,.55)}
+    .side .hr{height:1px;background:var(--line);margin:6px 0}
+    .side .mini{
+      display:flex;gap:10px;flex-wrap:wrap;
+    }
+    .side .mini a{font-size:12px}
+    .main{
+      display:flex;
+      flex-direction:column;
+      min-height: 72vh;
+    }
+    .frameTop{
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      background:#fff;
+    }
+    .frameTop .title{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .frameTop .title b{color:var(--green)}
+    .frameTop .title span{font-size:12px;color:rgba(15,15,15,.6);font-weight:700}
+    iframe{
+      width:100%;
+      flex:1;
+      border:0;
+      background:#fff;
+    }
+
+    /* Mobile */
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+      .side{order:2}
+      .main{order:1;min-height:70vh}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+            <path d="M12 2.6l8 3.2v6.2c0 5.1-3.5 9.2-8 9.9-4.5-.7-8-4.8-8-9.9V5.8L12 2.6z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>
+            <path d="M8.3 12h6.9l-2.2-2.2 1.3-1.3 4.4 4.4-4.4 4.4-1.3-1.3 2.2-2.2H8.3V12z" fill="#F4B41A"/>
+          </svg>
+        </div>
+        <div>
+          <b>AGEx</b><br/>
+          <span style="font-size:12px;color:rgba(15,15,15,.62);font-weight:800">Grand Plaza • App Body</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+        <div class="pill"><span class="dot"></span> Enter once. Navigate everything.</div>
+        <button class="btn gold" id="installBtn" style="display:none">Install App</button>
+        <a class="btn ghost" href="./" title="Open the original plaza page">Open Plaza</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- LEFT: NAV BODY -->
+    <div class="panel side">
+      <h1>The City Map</h1>
+      <p class="muted">
+        This is the body of AGEx. Use this shell to move through districts without sending people scattered links.
+      </p>
+
+      <div class="nav" id="nav">
+        <!-- You can add/rename these links anytime -->
+        <button data-url="./" class="active">
+          Grand Plaza <small>Home</small>
+        </button>
+
+        <!-- Your Smart Money Hub -->
+        <button data-url="https://charlesarin101.github.io/agexsmartmoneyhub/">
+          Smart Money Hub <small>Academy</small>
+        </button>
+
+        <!-- Your Charters -->
+        <button data-url="https://charlesarin101.github.io/the-stewards-charter/">
+          The Steward’s Charter <small>Finance</small>
+        </button>
+
+        <button data-url="https://charlesarin1-creator.github.io/the-stigweards-provisions/">
+          The Stigweard’s Provision <small>Market/Provision</small>
+        </button>
+
+        <!-- Your Selfany store -->
+        <button data-url="https://selfany.com/s/arinsglobalmarketplace">
+          Arin’s Global Marketplace <small>Store</small>
+        </button>
+      </div>
+
+      <div class="hr"></div>
+
+      <p class="muted" style="margin:0">
+        Admin shortcut:
+      </p>
+      <div class="mini">
+        <a class="btn" href="admin.html">Open Admin Console</a>
+        <a class="btn" href="lodge.html">Open Lodge Gate</a>
+      </div>
+
+      <p class="muted" style="margin:6px 0 0">
+        Tip: On Android, tap ⋮ → <b>Add to Home screen</b>.
+      </p>
+    </div>
+
+    <!-- RIGHT: CONTENT BODY -->
+    <div class="panel main">
+      <div class="frameTop">
+        <div class="title">
+          <b id="frameTitle">Grand Plaza</b>
+          <span id="frameSub">Unified entrance. App-like navigation.</span>
+        </div>
+        <div class="row" style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" id="openNewTabBtn" type="button">Open in new tab</button>
+          <button class="btn" id="refreshBtn" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <iframe id="frame" title="AGEx Content"></iframe>
+    </div>
+  </div>
+
+<script>
+  // ===== PWA install prompt (Android/Chrome) =====
+  let deferredPrompt = null;
+  const installBtn = document.getElementById("installBtn");
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "inline-flex";
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.style.display = "none";
+  });
+
+  // ===== App Shell Navigation =====
+  const nav = document.getElementById("nav");
+  const frame = document.getElementById("frame");
+  const frameTitle = document.getElementById("frameTitle");
+  const frameSub = document.getElementById("frameSub");
+
+  const defaultUrl = "./"; // your plaza home
+  const stateKey = "AGEX_APP_LAST_URL";
+
+  function setActive(btn){
+    [...nav.querySelectorAll("button")].forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+
+  function setFrame(url, label){
+    frame.src = url;
+    frameTitle.textContent = label || "AGEx";
+    frameSub.textContent = url;
+    localStorage.setItem(stateKey, url);
+  }
+
+  nav.addEventListener("click", (e)=>{
+    const btn = e.target.closest("button[data-url]");
+    if(!btn) return;
+    const url = btn.getAttribute("data-url");
+    const label = btn.textContent.replace(/\s+/g," ").trim();
+    setActive(btn);
+    setFrame(url, label);
+  });
+
+  document.getElementById("refreshBtn").addEventListener("click", ()=>{
+    frame.contentWindow?.location.reload();
+  });
+
+  document.getElementById("openNewTabBtn").addEventListener("click", ()=>{
+    const url = frame.src || defaultUrl;
+    window.open(url, "_blank", "noopener");
+  });
+
+  // Load last visited
+  const last = localStorage.getItem(stateKey) || defaultUrl;
+  // Try to mark matching button active
+  const match = [...nav.querySelectorAll("button[data-url]")].find(b => (b.getAttribute("data-url") === last));
+  if(match){ setActive(match); setFrame(last, match.textContent.replace(/\s+/g," ").trim()); }
+  else { setFrame(last, "Grand Plaza"); }
+
+  // ===== Service Worker registration =====
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+  }
+</script>
+
+</body>
+</html>

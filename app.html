@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0B3D2E" />
   <title>AGEx — Grand Plaza (App)</title>
-  <meta name="description" content="AGEx Grand Plaza — app-body for the ecosystem. Enter once. Navigate everything." />
+  <meta name="description" content="AGEx Grand Plaza — app-body for the ecosystem. Login first. Navigate everything." />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
@@ -85,6 +85,8 @@
     }
     .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.65)}
     .btn.ghost{background:transparent}
+    .btn.danger{border-color:rgba(220,38,38,.35); background:rgba(220,38,38,.06)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
 
     /* App layout: NAV TOP + FRAME BOTTOM */
     .wrap{
@@ -96,7 +98,6 @@
       gap:14px;
       min-height:calc(100vh - 64px);
     }
-
     .panel{
       background:var(--card);
       border:1px solid var(--line);
@@ -107,8 +108,8 @@
 
     /* NAV panel takes at most ~1/3 of screen */
     .navPanel{
-      max-height:34vh;        /* <= one third */
-      overflow:auto;          /* scroll only inside nav panel if needed */
+      max-height:34vh;
+      overflow:auto;
     }
     .navHead{
       padding:14px 14px 10px;
@@ -145,9 +146,8 @@
       padding:12px 14px;
       display:grid;
       gap:10px;
-      grid-template-columns:repeat(3, minmax(0, 1fr)); /* 9 items => 3x3 perfect */
+      grid-template-columns:repeat(3, minmax(0, 1fr));
     }
-
     .tile{
       border:1px solid var(--line);
       background:#fff;
@@ -250,246 +250,449 @@
       .navGrid{grid-template-columns:1fr}
       .frameTop .title span{max-width:62vw}
     }
+
+    /* ===== LOGIN GATE (covers everything until signed in) ===== */
+    .gate{
+      position:fixed; inset:0; z-index:9999;
+      display:flex; align-items:center; justify-content:center;
+      background:
+        radial-gradient(900px 600px at 15% 0%, rgba(244,180,26,.18), transparent 65%),
+        radial-gradient(900px 600px at 85% 10%, rgba(11,61,46,.14), transparent 62%),
+        rgba(247,250,249,.94);
+      backdrop-filter: blur(10px);
+      padding:18px;
+    }
+    .gateCard{
+      width:min(560px, 100%);
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:0 22px 60px rgba(0,0,0,.14);
+      overflow:hidden;
+    }
+    .gateHead{
+      padding:18px 18px 12px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(11,61,46,.05), transparent);
+    }
+    .gateHead h2{
+      margin:0;
+      color:var(--green);
+      font-size:30px;
+      letter-spacing:-.3px;
+    }
+    .gateHead p{
+      margin:8px 0 0;
+      color:rgba(15,15,15,.65);
+      font-weight:700;
+      line-height:1.4;
+    }
+    .gateBody{padding:18px}
+    .field{display:flex; flex-direction:column; gap:8px; margin-top:10px}
+    .field label{font-weight:900; color:rgba(15,15,15,.75)}
+    .input{
+      width:100%;
+      padding:14px 14px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      font-size:16px;
+      font-weight:750;
+      outline:none;
+    }
+    .input:focus{border-color:rgba(244,180,26,.7); box-shadow:0 0 0 4px rgba(244,180,26,.18)}
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .msg{
+      margin-top:12px;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(11,61,46,.04);
+      color:rgba(15,15,15,.72);
+      font-weight:750;
+      display:none;
+    }
+    .msg.show{display:block}
+    .small{
+      margin-top:10px;
+      color:rgba(15,15,15,.55);
+      font-weight:750;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    /* App hidden until login */
+    #appShell{display:none}
   </style>
 </head>
-<a class="btn" href="auth.html">Sign in</a>
 
 <body>
-  <div class="topbar">
-    <div class="inner">
-      <div class="brand">
-        <div class="mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
-            <path d="M12 2.6l8 3.2v6.2c0 5.1-3.5 9.2-8 9.9-4.5-.7-8-4.8-8-9.9V5.8L12 2.6z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>
-            <path d="M8.3 12h6.9l-2.2-2.2 1.3-1.3 4.4 4.4-4.4 4.4-1.3-1.3 2.2-2.2H8.3V12z" fill="#F4B41A"/>
-          </svg>
-        </div>
-        <div>
-          <b>AGEx</b><br/>
-          <span class="sub">Grand Plaza • App Body</span>
-        </div>
-      </div>
 
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
-        <div class="pill"><span class="dot"></span> Tap a district. It opens below.</div>
-        <button class="btn gold" id="installBtn" style="display:none">Install App</button>
-        <a class="btn ghost" href="./" title="Open original plaza page">Open Plaza</a>
+  <!-- LOGIN GATE -->
+  <div class="gate" id="gate">
+    <div class="gateCard">
+      <div class="gateHead">
+        <h2>AGEx Sign In</h2>
+        <p>
+          Enter your email to receive a secure login link (no password).
+          After login, you’ll return to the Grand Plaza app.
+        </p>
+      </div>
+      <div class="gateBody">
+        <div class="field">
+          <label for="email">Email</label>
+          <input class="input" id="email" type="email" placeholder="name@example.com" autocomplete="email" />
+        </div>
+
+        <div class="row">
+          <button class="btn gold" id="sendLinkBtn" type="button">Send Login Link</button>
+          <button class="btn" id="reloadBtn" type="button" title="If you already clicked the email link, tap this">I Already Logged In</button>
+        </div>
+
+        <div class="msg" id="gateMsg"></div>
+
+        <div class="small">
+          If the email link opens in a browser and not inside the installed app, that’s okay:
+          after confirming, open the AGEx app again — it will unlock automatically.
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="wrap">
+  <!-- APP SHELL (hidden until login) -->
+  <div id="appShell">
 
-    <!-- NAV TOP -->
-    <section class="panel navPanel" aria-label="City map navigation">
-      <div class="navHead">
-        <div>
-          <h1>The City Map</h1>
-          <p>Choose your next district. The page loads in the display area below.</p>
+    <div class="topbar">
+      <div class="inner">
+        <div class="brand">
+          <div class="mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+              <path d="M12 2.6l8 3.2v6.2c0 5.1-3.5 9.2-8 9.9-4.5-.7-8-4.8-8-9.9V5.8L12 2.6z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>
+              <path d="M8.3 12h6.9l-2.2-2.2 1.3-1.3 4.4 4.4-4.4 4.4-1.3-1.3 2.2-2.2H8.3V12z" fill="#F4B41A"/>
+            </svg>
+          </div>
+          <div>
+            <b>AGEx</b><br/>
+            <span class="sub" id="userSub">Grand Plaza • App Body</span>
+          </div>
         </div>
-        <div class="navHeadRight">
-          <button class="btn" id="openNewTabBtnTop" type="button">Open current in new tab</button>
-        </div>
-      </div>
 
-      <div class="navGrid" id="nav">
-
-        <!-- ORDERED FOR LEARNERS -->
-        <button class="tile active" data-url="https://charlesarin101.github.io/agexsmartmoneyhub/" data-title="Smart Money Hub" data-tag="Academy">
-          <span class="left">
-            <span class="name">Smart Money Hub</span>
-            <span class="tag">Academy</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-    
-
-        <button class="tile" data-url="https://charlesarin101.github.io/the-stewards-charter/" data-title="The Steward’s Charter" data-tag="Finance">
-          <span class="left">
-            <span class="name">The Steward’s Charter</span>
-            <span class="tag">Finance</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile" data-url="https://charlesarin101.github.io/Income_streams_lab/" data-title="Income Streams Lab" data-tag="Lab">
-          <span class="left">
-            <span class="name">Income Streams Lab</span>
-            <span class="tag">Lab</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile" data-url="https://charlesarin1-creator.github.io/the-stigweards-provisions/" data-title="The Stigweard’s Provision" data-tag="Provision">
-          <span class="left">
-            <span class="name">The Stigweard’s Provision</span>
-            <span class="tag">Provision</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile" data-url="https://selfany.com/s/arinsglobalmarketplace" data-title="Arin’s Global Marketplace" data-tag="Store">
-          <span class="left">
-            <span class="name">Arin’s Global Marketplace</span>
-            <span class="tag">Store</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile" data-url="https://charlesarin1-creator.github.io/bigsharks-site/" data-title="BigSharks" data-tag="Project">
-          <span class="left">
-            <span class="name">BigSharks</span>
-            <span class="tag">Project</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile" data-url="https://charlesarin101.github.io/christianchildacademy_zaria/" data-title="Christian Child Academy" data-tag="Education">
-          <span class="left">
-            <span class="name">Christian Child Academy</span>
-            <span class="tag">Education</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile" data-url="./" data-title="Grand Plaza" data-tag="Home">
-          <span class="left">
-            <span class="name">Grand Plaza</span>
-            <span class="tag">Home</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <!-- OPTIONAL ADMIN TILE (hidden unless you unlock it below)
-        <button class="tile" data-url="admin.html" data-title="Admin Console" data-tag="Keys" id="adminTile">
-          <span class="left">
-            <span class="name">Admin Console</span>
-            <span class="tag">Keys</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-        -->
-
-      </div>
-    </section>
-
-    <!-- DISPLAY DOWN -->
-    <section class="panel framePanel" aria-label="Display area">
-      <div class="frameTop">
-        <div class="title">
-          <b id="frameTitle">Smart Money Hub</b>
-          <span id="frameSub">Loading…</span>
-        </div>
-        <div class="frameBtns">
-          <button class="btn" id="refreshBtn" type="button">Refresh</button>
-          <button class="btn" id="openNewTabBtn" type="button">Open current in new tab</button>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+          <div class="pill"><span class="dot"></span> Tap a district. It opens below.</div>
+          <button class="btn gold" id="installBtn" style="display:none">Install App</button>
+          <button class="btn danger" id="signOutBtn" type="button" title="Sign out from this device">Sign out</button>
         </div>
       </div>
-      <iframe id="frame" title="AGEx Content"></iframe>
-    </section>
+    </div>
 
+    <div class="wrap">
+
+      <!-- NAV TOP -->
+      <section class="panel navPanel" aria-label="City map navigation">
+        <div class="navHead">
+          <div>
+            <h1>The City Map</h1>
+            <p>Choose your next district. The page loads in the display area below.</p>
+          </div>
+          <div class="navHeadRight">
+            <button class="btn" id="openNewTabBtnTop" type="button">Open current in new tab</button>
+          </div>
+        </div>
+
+        <div class="navGrid" id="nav">
+
+          <!-- 1 -->
+          <button class="tile active" data-url="https://charlesarin101.github.io/agexsmartmoneyhub/" data-title="Smart Money Hub" data-tag="Academy">
+            <span class="left">
+              <span class="name">Smart Money Hub</span>
+              <span class="tag">Academy</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+          <!-- 2 -->
+          <button class="tile" data-url="https://charlesarin101.github.io/the-stewards-charter/" data-title="The Steward’s Charter" data-tag="Finance">
+            <span class="left">
+              <span class="name">The Steward’s Charter</span>
+              <span class="tag">Finance</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+          <!-- 3 -->
+          <button class="tile" data-url="https://charlesarin101.github.io/Income_streams_lab/" data-title="Income Streams Lab" data-tag="Lab">
+            <span class="left">
+              <span class="name">Income Streams Lab</span>
+              <span class="tag">Lab</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+          <!-- 4 -->
+          <button class="tile" data-url="https://charlesarin1-creator.github.io/the-stigweards-provisions/" data-title="The Stigweard’s Provision" data-tag="Provision">
+            <span class="left">
+              <span class="name">The Stigweard’s Provision</span>
+              <span class="tag">Provision</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+          <!-- 5 -->
+          <button class="tile" data-url="https://selfany.com/s/arinsglobalmarketplace" data-title="Arin’s Global Marketplace" data-tag="Store">
+            <span class="left">
+              <span class="name">Arin’s Global Marketplace</span>
+              <span class="tag">Store</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+          <!-- 6 -->
+          <button class="tile" data-url="https://charlesarin1-creator.github.io/bigsharks-site/" data-title="BigSharks" data-tag="Project">
+            <span class="left">
+              <span class="name">BigSharks</span>
+              <span class="tag">Project</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+          <!-- 7 -->
+          <button class="tile" data-url="https://charlesarin101.github.io/christianchildacademy_zaria/" data-title="Christian Child Academy" data-tag="Education">
+            <span class="left">
+              <span class="name">Christian Child Academy</span>
+              <span class="tag">Education</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+          <!-- 8 -->
+          <button class="tile" data-url="https://charlesarin101.github.io/agexsmartmoneyhub/lodge.html?v=2" data-title="Steward’s Lodge Gate" data-tag="Enter">
+            <span class="left">
+              <span class="name">Steward’s Lodge Gate</span>
+              <span class="tag">Enter</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+          <!-- 9 -->
+          <button class="tile" data-url="https://charlesarin1-creator.github.io/-Agexgrand_plaza/" data-title="Grand Plaza" data-tag="Home">
+            <span class="left">
+              <span class="name">Grand Plaza</span>
+              <span class="tag">Home</span>
+            </span>
+            <span class="chev">›</span>
+          </button>
+
+        </div>
+      </section>
+
+      <!-- DISPLAY DOWN -->
+      <section class="panel framePanel" aria-label="Display area">
+        <div class="frameTop">
+          <div class="title">
+            <b id="frameTitle">Smart Money Hub</b>
+            <span id="frameSub">Loading…</span>
+          </div>
+          <div class="frameBtns">
+            <button class="btn" id="refreshBtn" type="button">Refresh</button>
+            <button class="btn" id="openNewTabBtn" type="button">Open current in new tab</button>
+          </div>
+        </div>
+        <iframe id="frame" title="AGEx Content"></iframe>
+      </section>
+
+    </div>
   </div>
-  // ===== Auth guard =====
-(async function(){
-  const { data } = await supabaseClient.auth.getSession();
-  const session = data?.session;
 
-  // If not signed in, send them to auth page
-  if(!session){
-    location.href = "auth.html";
-    return;
-  }
-})();
+  <!-- Supabase JS (must load before our auth code) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
 
-<script>
-  // ===== PWA install prompt (Android/Chrome) =====
-  let deferredPrompt = null;
-  const installBtn = document.getElementById("installBtn");
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = "inline-flex";
-  });
-  installBtn.addEventListener("click", async () => {
-    if(!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    installBtn.style.display = "none";
-  });
+  <script>
+    // ====== SUPABASE CONFIG (yours) ======
+    const SUPABASE_URL = "https://hfgtijzqrlkivsgwgnbp.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_IGXxIQRWulcE5N0CKqTxyQ_X5FFj194";
 
-  // ===== App Shell Navigation =====
-  const nav = document.getElementById("nav");
-  const frame = document.getElementById("frame");
-  const frameTitle = document.getElementById("frameTitle");
-  const frameSub = document.getElementById("frameSub");
-  const stateKey = "AGEX_APP_LAST_URL";
+    // IMPORTANT: This must be the exact URL of THIS app.html on GitHub Pages
+    // It is used for the magic-link redirect back into the app.
+    const REDIRECT_TO = "https://charlesarin1-creator.github.io/-Agexgrand_plaza/app.html";
 
-  function setActive(btn){
-    [...nav.querySelectorAll("button.tile")].forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-  }
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  function setFrame(url, title, tag){
-    frame.src = url;
-    frameTitle.textContent = title || "AGEx";
-    frameSub.textContent = tag ? (tag + " • " + url) : url;
-    localStorage.setItem(stateKey, url);
-  }
+    // ===== UI helpers =====
+    const gate = document.getElementById("gate");
+    const appShell = document.getElementById("appShell");
+    const gateMsg = document.getElementById("gateMsg");
 
-  nav.addEventListener("click", (e)=>{
-    const btn = e.target.closest("button.tile[data-url]");
-    if(!btn) return;
-    const url = btn.getAttribute("data-url");
-    const title = btn.getAttribute("data-title") || "AGEx";
-    const tag = btn.getAttribute("data-tag") || "";
-    setActive(btn);
-    setFrame(url, title, tag);
-  });
+    function showMsg(text){
+      gateMsg.textContent = text;
+      gateMsg.classList.add("show");
+    }
+    function hideGate(){
+      gate.style.display = "none";
+      appShell.style.display = "block";
+    }
+    function showGate(){
+      gate.style.display = "flex";
+      appShell.style.display = "none";
+    }
 
-  function openCurrent(){
-    const url = frame.src || localStorage.getItem(stateKey) || "https://charlesarin101.github.io/agexsmartmoneyhub/";
-    window.open(url, "_blank", "noopener");
-  }
+    // ===== AUTH: check session, lock/unlock =====
+    async function checkSessionAndToggle(){
+      const { data, error } = await supabaseClient.auth.getSession();
+      if(error){
+        showGate();
+        showMsg("Auth check error. Please try again.");
+        return false;
+      }
+      const session = data?.session;
+      if(!session){
+        showGate();
+        return false;
+      }
 
-  document.getElementById("openNewTabBtn").addEventListener("click", openCurrent);
-  document.getElementById("openNewTabBtnTop").addEventListener("click", openCurrent);
+      // Signed in -> unlock app
+      hideGate();
 
-  document.getElementById("refreshBtn").addEventListener("click", ()=>{
-    try{ frame.contentWindow.location.reload(); }catch(e){ frame.src = frame.src; }
-  });
+      // Show email in header
+      const email = session.user?.email || "Signed in";
+      const sub = document.getElementById("userSub");
+      sub.textContent = "Signed in • " + email;
 
-  // ===== Admin visibility (optional) =====
-  // If you later want Admin inside the app, uncomment the Admin tile in HTML,
-  // then require a local unlock on YOUR device only:
-  // localStorage.setItem("AGEX_ADMIN_OK","1");
-  // and only then show the tile.
-  // const adminTile = document.getElementById("adminTile");
-  // if(adminTile){
-  //   adminTile.style.display = (localStorage.getItem("AGEX_ADMIN_OK")==="1") ? "flex" : "none";
-  // }
+      return true;
+    }
 
-  // ===== Load last visited or default =====
-  const defaultUrl = "https://charlesarin101.github.io/agexsmartmoneyhub/";
-  const last = localStorage.getItem(stateKey) || defaultUrl;
+    // Listen for magic-link auth changes
+    supabaseClient.auth.onAuthStateChange((_event, _session) => {
+      // If user just signed in, unlock immediately
+      checkSessionAndToggle();
+    });
 
-  const match = [...nav.querySelectorAll("button.tile[data-url]")].find(b => b.getAttribute("data-url") === last);
-  if(match){
-    setActive(match);
-    setFrame(last, match.getAttribute("data-title"), match.getAttribute("data-tag"));
-  }else{
-    const first = nav.querySelector("button.tile[data-url]");
-    setActive(first);
-    setFrame(first.getAttribute("data-url"), first.getAttribute("data-title"), first.getAttribute("data-tag"));
-  }
+    // ===== LOGIN ACTIONS =====
+    document.getElementById("sendLinkBtn").addEventListener("click", async ()=>{
+      const email = (document.getElementById("email").value || "").trim();
+      if(!email){
+        showMsg("Enter your email first.");
+        return;
+      }
 
-  // ===== Service Worker =====
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
-  }
-</script>
+      const btn = document.getElementById("sendLinkBtn");
+      btn.disabled = true;
+      btn.textContent = "Sending…";
+
+      const { error } = await supabaseClient.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: REDIRECT_TO }
+      });
+
+      btn.disabled = false;
+      btn.textContent = "Send Login Link";
+
+      if(error){
+        showMsg("Could not send link. Check email and try again.");
+        return;
+      }
+      showMsg("Login link sent. Check your email and tap the link to enter AGEx.");
+    });
+
+    document.getElementById("reloadBtn").addEventListener("click", async ()=>{
+      showMsg("Checking login…");
+      const ok = await checkSessionAndToggle();
+      if(!ok) showMsg("Not logged in yet. Open the email link, then return here.");
+    });
+
+    // Sign out
+    document.getElementById("signOutBtn").addEventListener("click", async ()=>{
+      await supabaseClient.auth.signOut();
+      showGate();
+      showMsg("Signed out. Please sign in again.");
+    });
+
+    // ===== PWA install prompt (Android/Chrome) =====
+    let deferredPrompt = null;
+    const installBtn = document.getElementById("installBtn");
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = "inline-flex";
+    });
+    installBtn.addEventListener("click", async () => {
+      if(!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    });
+
+    // ===== APP SHELL NAVIGATION =====
+    const nav = document.getElementById("nav");
+    const frame = document.getElementById("frame");
+    const frameTitle = document.getElementById("frameTitle");
+    const frameSub = document.getElementById("frameSub");
+    const stateKey = "AGEX_APP_LAST_URL";
+
+    function setActive(btn){
+      [...nav.querySelectorAll("button.tile")].forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    }
+
+    function setFrame(url, title, tag){
+      frame.src = url;
+      frameTitle.textContent = title || "AGEx";
+      frameSub.textContent = tag ? (tag + " • " + url) : url;
+      localStorage.setItem(stateKey, url);
+    }
+
+    nav.addEventListener("click", (e)=>{
+      const btn = e.target.closest("button.tile[data-url]");
+      if(!btn) return;
+      const url = btn.getAttribute("data-url");
+      const title = btn.getAttribute("data-title") || "AGEx";
+      const tag = btn.getAttribute("data-tag") || "";
+      setActive(btn);
+      setFrame(url, title, tag);
+    });
+
+    function openCurrent(){
+      const url = frame.src || localStorage.getItem(stateKey) || "https://charlesarin101.github.io/agexsmartmoneyhub/";
+      window.open(url, "_blank", "noopener");
+    }
+
+    document.getElementById("openNewTabBtn").addEventListener("click", openCurrent);
+    document.getElementById("openNewTabBtnTop").addEventListener("click", openCurrent);
+
+    document.getElementById("refreshBtn").addEventListener("click", ()=>{
+      try{ frame.contentWindow.location.reload(); }catch(e){ frame.src = frame.src; }
+    });
+
+    function bootFrame(){
+      const defaultUrl = "https://charlesarin101.github.io/agexsmartmoneyhub/";
+      const last = localStorage.getItem(stateKey) || defaultUrl;
+
+      const match = [...nav.querySelectorAll("button.tile[data-url]")].find(b => b.getAttribute("data-url") === last);
+      if(match){
+        setActive(match);
+        setFrame(last, match.getAttribute("data-title"), match.getAttribute("data-tag"));
+      }else{
+        const first = nav.querySelector("button.tile[data-url]");
+        setActive(first);
+        setFrame(first.getAttribute("data-url"), first.getAttribute("data-title"), first.getAttribute("data-tag"));
+      }
+    }
+
+    // ===== Service Worker =====
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+    }
+
+    // ===== Start: lock first, then boot app if signed in =====
+    (async function init(){
+      const ok = await checkSessionAndToggle();
+      if(ok){
+        bootFrame();
+      }else{
+        // still boot frame only after login succeeds (onAuthStateChange)
+      }
+    })();
+  </script>
+
 </body>
 </html>
+

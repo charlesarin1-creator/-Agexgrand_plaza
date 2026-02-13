@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0B3D2E" />
+  <title>AGEx — Sign In</title>
+  <style>
+    :root{--green:#0B3D2E;--gold:#F4B41A;--bg:#F7FAF9;--card:#fff;--line:rgba(0,0,0,.10);--ink:#111;--muted:#667;}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink);}
+    .wrap{max-width:520px;margin:0 auto;padding:22px 16px;}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;}
+    h1{margin:0 0 6px;color:var(--green)}
+    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+    label{display:block;font-weight:800;font-size:12px;margin-top:10px}
+    input{width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);margin-top:6px;font-family:inherit}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{flex:1;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:12px 14px;border:1px solid var(--line);background:#fff;font-weight:900;cursor:pointer}
+    .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.6)}
+    .btn.dark{background:var(--green);color:#fff;border-color:transparent}
+    .msg{margin-top:10px;font-size:13px}
+    code{background:#fff;border:1px solid var(--line);padding:2px 6px;border-radius:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>AGEx Sign In</h1>
+      <p class="muted">
+        Use your email to receive a secure login link (no password). After login, you’ll return to the Grand Plaza app.
+      </p>
+      <label>Email</label>
+      <input id="email" placeholder="name@example.com" inputmode="email" />
+      <div class="row">
+        <button class="btn gold" id="sendLink">Send Login Link</button>
+        <a class="btn" href="app.html">Back to App</a>
+      </div>
+      <div class="msg" id="msg"></div>
+    </div>
+
+    <div class="card">
+      <p class="muted">
+        If you’re the founder/admin, you’ll also see Admin tools after login (once we add your role).
+      </p>
+    </div>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+
+  <script>
+    const msg = document.getElementById("msg");
+
+    document.getElementById("sendLink").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      if(!email){ msg.textContent = "Enter your email."; return; }
+
+      msg.textContent = "Sending link…";
+
+      const { error } = await supabaseClient.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: location.origin + location.pathname.replace(/\/[^\/]*$/, "/app.html")
+        }
+      });
+
+      if(error){
+        msg.textContent = "Error: " + error.message;
+        return;
+      }
+
+      msg.innerHTML = "✅ Login link sent. Check your email and tap the link. You will return to <code>app.html</code>.";
+    });
+  </script>
+</body>
+</html>

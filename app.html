@@ -252,6 +252,7 @@
     }
   </style>
 </head>
+<a class="btn" href="auth.html">Sign in</a>
 
 <body>
   <div class="topbar">
@@ -389,6 +390,17 @@
     </section>
 
   </div>
+  // ===== Auth guard =====
+(async function(){
+  const { data } = await supabaseClient.auth.getSession();
+  const session = data?.session;
+
+  // If not signed in, send them to auth page
+  if(!session){
+    location.href = "auth.html";
+    return;
+  }
+})();
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 

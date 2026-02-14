@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0B3D2E" />
   <title>AGEx — Grand Plaza (App)</title>
-  <meta name="description" content="AGEx Grand Plaza — a life operating system. Sign in → choose a domain → explore resources." />
+  <meta name="description" content="AGEx Grand Plaza — app-body for the ecosystem. Sign in → choose a domain → choose a district." />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
@@ -17,89 +17,79 @@
       --green:#0B3D2E;
       --green2:#083326;
       --gold:#F4B41A;
-      --bg:#F7FAF9;
+
+      --bg:#0B3D2E;          /* ONE SHADE BACKGROUND */
       --card:#FFFFFF;
       --ink:#0F0F0F;
       --muted:#5F6B66;
       --line:rgba(15,15,15,.10);
       --shadow:0 18px 45px rgba(0,0,0,.10);
-      --radius:20px;
-      --max:1120px;
+      --radius:18px;
+      --max:1100px;
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;height:100%}
     body{
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
       color:var(--ink);
-      background:
-        radial-gradient(900px 600px at 15% 0%, rgba(244,180,26,.12), transparent 65%),
-        radial-gradient(900px 600px at 85% 10%, rgba(11,61,46,.10), transparent 62%),
-        var(--bg);
+      background: var(--bg);
     }
     a{color:inherit;text-decoration:none}
 
-    /* Topbar */
+    /* TOP BAR (MINIMAL) */
     .topbar{
       position:sticky;top:0;z-index:60;
-      background:rgba(247,250,249,.92);
+      background:rgba(11,61,46,.92);
       backdrop-filter:saturate(180%) blur(10px);
-      border-bottom:1px solid var(--line);
+      border-bottom:1px solid rgba(255,255,255,.14);
     }
     .topbar .inner{
       max-width:var(--max);
       margin:0 auto;
-      padding:12px 14px;
+      padding:10px 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
     }
-    .brand{display:flex;align-items:center;gap:10px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:120px}
     .mark{
-      width:40px;height:40px;border-radius:14px;
+      width:38px;height:38px;border-radius:12px;
       display:grid;place-items:center;
       background:linear-gradient(135deg,var(--green),var(--green2));
-      box-shadow:0 10px 22px rgba(11,61,46,.22);
+      box-shadow:0 10px 22px rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.10);
     }
-    .brand b{letter-spacing:.2px}
-    .sub{font-size:12px;color:rgba(15,15,15,.62);font-weight:800}
-
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      border:1px solid var(--line);
-      background:#fff;
-      font-weight:850;
-      font-size:12px;
-      color:rgba(15,15,15,.72);
-      white-space:nowrap;
-    }
-    .pill .dot{width:10px;height:10px;border-radius:99px;background:var(--gold);box-shadow:0 0 0 4px rgba(244,180,26,.16)}
-
+    .brand b{letter-spacing:.2px;color:#fff}
+    .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      padding:10px 14px;border-radius:999px;
-      border:1px solid var(--line);
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:9px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
       font-weight:900;
-      background:#fff;
+      background:rgba(255,255,255,.06);
+      color:#fff;
       cursor:pointer;
       white-space:nowrap;
-      user-select:none;
+      transition:.12s ease;
+      font-size:13px;
     }
-    .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.65)}
-    .btn.ghost{background:transparent}
-    .btn.dark{background:var(--green);color:#fff;border-color:transparent}
-    .btn:active{transform:translateY(1px)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.gold{
+      background:rgba(244,180,26,.18);
+      border-color:rgba(244,180,26,.38);
+      color:#fff;
+    }
 
-    /* Layout */
+    /* APP WRAP */
     .wrap{
       max-width:var(--max);
       margin:0 auto;
-      padding:14px;
+      padding:12px;
       display:flex;
       flex-direction:column;
-      gap:14px;
-      min-height:calc(100vh - 64px);
+      gap:12px;
+      min-height:calc(100vh - 60px);
     }
     .panel{
       background:var(--card);
@@ -109,172 +99,124 @@
       overflow:hidden;
     }
 
-    /* Top area: Domains + (optional) Category resources */
+    /* TOP PANEL (DOMAINS / SUB-DISTRICTS) */
     .navPanel{
-      max-height:34vh;
+      max-height:36vh; /* <= roughly one third */
       overflow:auto;
     }
-    .navHead{
-      padding:14px 14px 10px;
+    .navTop{
+      padding:12px 12px 10px;
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
       border-bottom:1px solid var(--line);
       background:#fff;
     }
-    .navHead h1{
-      margin:0;
-      font-size:18px;
-      color:var(--green);
-      letter-spacing:-.2px;
+    .navTitle{
+      display:flex;flex-direction:column;gap:3px;min-width:0;
     }
-    .navHead p{
-      margin:6px 0 0;
-      color:rgba(15,15,15,.62);
-      font-weight:720;
+    .navTitle b{color:var(--green);font-size:14px}
+    .navTitle span{color:rgba(15,15,15,.60);font-weight:750;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .navControls{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .btnLite{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:9px 12px;border-radius:999px;
+      border:1px solid var(--line);
+      font-weight:900;
+      background:#fff;
+      color:rgba(15,15,15,.80);
+      cursor:pointer;
+      white-space:nowrap;
       font-size:13px;
-      line-height:1.35;
-    }
-    .navHeadRight{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-      justify-content:flex-end;
     }
 
     .grid{
-      padding:12px 14px;
+      padding:12px;
       display:grid;
       gap:10px;
-    }
-    .domainGrid{
-      grid-template-columns:repeat(3, minmax(0, 1fr)); /* 7 domains => 3x3 layout feel */
-    }
-    .resourceGrid{
       grid-template-columns:repeat(3, minmax(0, 1fr));
-      padding-top:0;
     }
+    @media (max-width: 740px){ .grid{grid-template-columns:repeat(2, minmax(0, 1fr))} }
+    @media (max-width: 420px){ .grid{grid-template-columns:1fr} }
 
     .tile{
       border:1px solid var(--line);
       background:#fff;
       border-radius:16px;
-      padding:12px 12px;
+      padding:10px 10px;
       cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      min-height:58px;
+      min-height:54px;
       transition:.12s ease;
       text-align:left;
-      width:100%;
     }
     .tile:hover{transform:translateY(-1px)}
-    .tile.active{
-      border-color:rgba(244,180,26,.70);
-      box-shadow:0 10px 22px rgba(244,180,26,.18);
-    }
-    .tile .left{display:flex;flex-direction:column;gap:3px;min-width:0}
+    .tile .left{display:flex;flex-direction:column;gap:2px;min-width:0}
     .tile .name{
-      font-weight:950;
-      color:#111;
-      font-size:13px;
-      line-height:1.15;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-weight:950;color:#111;font-size:13px;line-height:1.15;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
     .tile .tag{
-      font-weight:850;
-      color:rgba(15,15,15,.55);
-      font-size:11px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-weight:850;color:rgba(15,15,15,.55);font-size:11px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
     .tile .chev{font-weight:950;color:rgba(11,61,46,.85);opacity:.8;flex:0 0 auto}
 
-    .miniBar{
-      padding:0 14px 12px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .crumb{
-      display:flex;gap:8px;flex-wrap:wrap;align-items:center;
-      font-weight:900;font-size:12px;color:rgba(15,15,15,.66);
-    }
-    .crumb b{color:var(--green)}
-    .note{
-      font-size:12px;
-      color:rgba(15,15,15,.58);
-      font-weight:750;
-    }
-
-    /* Frame panel */
+    /* DISPLAY PANEL */
     .framePanel{
       flex:1;
       display:flex;
       flex-direction:column;
-      min-height:52vh;
+      min-height:46vh;
     }
     .frameTop{
-      padding:12px 14px;
+      padding:10px 12px;
       border-bottom:1px solid var(--line);
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
       background:#fff;
     }
-    .frameTop .title{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      min-width:0;
+    .frameTitle{
+      display:flex;flex-direction:column;gap:2px;min-width:0;
     }
-    .frameTop .title b{color:var(--green)}
-    .frameTop .title span{
-      font-size:12px;
-      color:rgba(15,15,15,.60);
-      font-weight:750;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width:72vw;
+    .frameTitle b{color:var(--green);font-size:14px}
+    .frameTitle span{
+      font-size:12px;color:rgba(15,15,15,.60);font-weight:750;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70vw;
     }
-    .frameBtns{
+    iframe{width:100%;flex:1;border:0;background:#fff}
+
+    /* FOOT PANEL */
+    .footPanel{
+      padding:12px;
       display:flex;
+      align-items:center;
+      justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    iframe{
-      width:100%;
-      flex:1;
-      border:0;
       background:#fff;
     }
-
-    /* Mobile: 2 columns */
-    @media (max-width: 720px){
-      .domainGrid{grid-template-columns:repeat(2, minmax(0, 1fr))}
-      .resourceGrid{grid-template-columns:repeat(2, minmax(0, 1fr))}
-      .navPanel{max-height:40vh}
+    .footLinks{display:flex;gap:10px;flex-wrap:wrap}
+    .footLinks a{
+      font-size:12px;
+      font-weight:850;
+      color:rgba(15,15,15,.70);
+      border:1px solid var(--line);
+      padding:7px 10px;
+      border-radius:999px;
+      background:#fff;
     }
-    @media (max-width: 420px){
-      .domainGrid{grid-template-columns:1fr}
-      .resourceGrid{grid-template-columns:1fr}
-      .frameTop .title span{max-width:62vw}
+    .footNote{
+      font-size:12px;
+      font-weight:750;
+      color:rgba(15,15,15,.55);
     }
-
-    /* Hidden */
-    .hidden{display:none !important}
   </style>
 </head>
 
@@ -290,68 +232,60 @@
           </svg>
         </div>
         <div>
-          <b>AGEx</b><br/>
-          <span class="sub">Grand Plaza • Life Operating System</span>
+          <b>AGEx</b>
         </div>
       </div>
 
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
-        <div class="pill" title="Signed in status">
-          <span class="dot"></span>
-          <span id="userChip">Signed in</span>
-        </div>
-
-        <button class="btn gold" id="installBtn" style="display:none">Install</button>
+      <div class="actions">
         <button class="btn" id="shareBtn" type="button">Share</button>
-        <button class="btn dark" id="signOutBtn" type="button">Sign out</button>
+        <button class="btn gold" id="installBtn" type="button" style="display:none">Install</button>
+        <button class="btn" id="signOutBtn" type="button">Sign out</button>
       </div>
     </div>
   </div>
 
-  <!-- BODY -->
   <div class="wrap">
 
-    <!-- DOMAINS + RESOURCES -->
-    <section class="panel navPanel" aria-label="Domains and resources">
-      <div class="navHead">
-        <div>
-          <h1 id="navTitle">Seven Domains</h1>
-          <p id="navDesc">Choose a domain to see what’s inside. Then open any resource below.</p>
+    <!-- NAV TOP: DOMAINS / SUB-DISTRICTS -->
+    <section class="panel navPanel" aria-label="Domains navigation">
+      <div class="navTop">
+        <div class="navTitle">
+          <b id="navHeader">Domains</b>
+          <span id="navSub">Choose a domain to open its districts.</span>
         </div>
 
-        <div class="navHeadRight">
-          <button class="btn" id="homeBtn" type="button">Home</button>
-          <button class="btn" id="openNewTabBtnTop" type="button">Open current in new tab</button>
-        </div>
-      </div>
-
-      <div class="miniBar">
-        <div class="crumb" id="crumb">
-          <span>Now:</span> <b>Home</b>
-        </div>
-        <div class="note" id="note">
-          Some areas are still building — they will show “Coming Soon”.
+        <div class="navControls">
+          <button class="btnLite" id="backBtn" type="button" style="display:none">← Back</button>
+          <button class="btnLite" id="openNewTabBtnTop" type="button">Open current</button>
         </div>
       </div>
 
-      <div class="grid domainGrid" id="domainGrid"></div>
-
-      <div class="grid resourceGrid hidden" id="resourceGrid"></div>
+      <div class="grid" id="grid"></div>
     </section>
 
-    <!-- DISPLAY -->
+    <!-- DISPLAY DOWN -->
     <section class="panel framePanel" aria-label="Display area">
       <div class="frameTop">
-        <div class="title">
+        <div class="frameTitle">
           <b id="frameTitle">Welcome</b>
-          <span id="frameSub">Select a resource to load it here.</span>
+          <span id="frameSub">Choose a domain above.</span>
         </div>
-        <div class="frameBtns">
-          <button class="btn" id="refreshBtn" type="button">Refresh</button>
-          <button class="btn" id="openNewTabBtn" type="button">Open current in new tab</button>
+        <div class="navControls">
+          <button class="btnLite" id="refreshBtn" type="button">Refresh</button>
+          <button class="btnLite" id="openNewTabBtn" type="button">Open current</button>
         </div>
       </div>
       <iframe id="frame" title="AGEx Content"></iframe>
+    </section>
+
+    <!-- FOOT -->
+    <section class="panel footPanel" aria-label="Support links">
+      <div class="footLinks">
+        <a href="mailto:arinonebusiness@gmail.com">Support</a>
+        <a href="#" onclick="alert('Privacy page coming soon.');return false;">Privacy</a>
+        <a href="#" onclick="alert('Terms page coming soon.');return false;">Terms</a>
+      </div>
+      <div class="footNote">AGEx • App Shell • GitHub Pages</div>
     </section>
 
   </div>
@@ -362,49 +296,262 @@
 
   <script>
     // =========================
-    // 1) AUTH GUARD (LOGIN FIRST)
+    // AUTH GUARD (current behavior)
     // =========================
     (async function authGuard(){
       try{
         const { data } = await supabaseClient.auth.getSession();
         const session = data?.session;
-
         if(!session){
           location.href = "auth.html";
           return;
         }
-
-        // Show user chip
-        const email = session?.user?.email || "Signed in";
-        document.getElementById("userChip").textContent = email;
-
       }catch(e){
-        // If something is wrong with supabase setup, force auth page
+        // If supabase is not loading correctly, still fail-safe to auth
         location.href = "auth.html";
       }
     })();
 
-    // Sign out
-    document.getElementById("signOutBtn").addEventListener("click", async ()=>{
-      try{ await supabaseClient.auth.signOut(); }catch(e){}
-      localStorage.removeItem("AGEX_APP_LAST_URL");
-      localStorage.removeItem("AGEX_LAST_DOMAIN");
-      location.href = "auth.html";
+    // =========================
+    // DATA: DOMAINS + SUB-DISTRICTS
+    // (Edit names and links here only)
+    // =========================
+    const DOMAINS = [
+      {
+        id:"finance",
+        name:"Finance",
+        tag:"Smart Money • Lab • Business",
+        items:[
+          { name:"Smart Money Hub", tag:"Academy", url:"https://charlesarin101.github.io/agexsmartmoneyhub/" },
+          { name:"Income Stack Lab", tag:"Execution", url:"https://charlesarin101.github.io/Income_streams_lab/" },
+          { name:"BigSharks", tag:"Business", url:"https://charlesarin1-creator.github.io/bigsharks-site/" },
+        ]
+      },
+      {
+        id:"home",
+        name:"Home",
+        tag:"Family • Order • Living",
+        items:[
+          { name:"The Steward’s Charter", tag:"Finance Charter", url:"https://charlesarin101.github.io/the-stewards-charter/" },
+          { name:"HomeJoy Executives", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Steward Lodge Gate", tag:"Members", url:"https://charlesarin101.github.io/agexsmartmoneyhub/lodge.html?v=2" },
+        ]
+      },
+      {
+        id:"marketplace",
+        name:"Marketplace",
+        tag:"Provision • Store",
+        items:[
+          { name:"Arin’s Global Marketplace", tag:"Selfany Store", url:"https://selfany.com/s/arinsglobalmarketplace" },
+          { name:"The Stigweard’s Provision", tag:"Provision", url:"https://charlesarin1-creator.github.io/the-stigweards-provisions/" },
+          { name:"Coming Soon", tag:"", url:"#coming-soon" },
+        ]
+      },
+      {
+        id:"education",
+        name:"Education",
+        tag:"Academy • Learning",
+        items:[
+          { name:"Christian Child Academy", tag:"School", url:"https://charlesarin101.github.io/christianchildacademy_zaria/" },
+          { name:"Smart Money Hub", tag:"Academy", url:"https://charlesarin101.github.io/agexsmartmoneyhub/" },
+          { name:"Coming Soon", tag:"", url:"#coming-soon" },
+        ]
+      },
+      {
+        id:"media",
+        name:"Media",
+        tag:"iService • Downloads",
+        items:[
+          { name:"iService", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Crystal Literature", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Coming Soon", tag:"", url:"#coming-soon" },
+        ]
+      },
+      {
+        id:"exchangeLife",
+        name:"Exchange Life",
+        tag:"Encounters • Transform",
+        items:[
+          { name:"Encounters", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Frequency", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Coming Soon", tag:"", url:"#coming-soon" },
+        ]
+      },
+      {
+        id:"foundation",
+        name:"Foundation",
+        tag:"Giving • Legacy",
+        items:[
+          { name:"Foundation Hub", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Partners", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Coming Soon", tag:"", url:"#coming-soon" },
+        ]
+      },
+      {
+        id:"logistics",
+        name:"Logistics",
+        tag:"Operations • Movement",
+        items:[
+          { name:"Logistics Desk", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Trusted Operator", tag:"Coming soon", url:"#coming-soon" },
+          { name:"Coming Soon", tag:"", url:"#coming-soon" },
+        ]
+      },
+      {
+        id:"plaza",
+        name:"Grand Plaza",
+        tag:"Home / Map",
+        items:[
+          { name:"Grand Plaza (Original)", tag:"Home", url:"./" },
+          { name:"This App (app.html)", tag:"Shell", url:"./app.html" },
+          { name:"Coming Soon", tag:"", url:"#coming-soon" },
+        ]
+      }
+    ];
+
+    // =========================
+    // UI STATE
+    // =========================
+    const grid = document.getElementById("grid");
+    const navHeader = document.getElementById("navHeader");
+    const navSub = document.getElementById("navSub");
+    const backBtn = document.getElementById("backBtn");
+
+    const frame = document.getElementById("frame");
+    const frameTitle = document.getElementById("frameTitle");
+    const frameSub = document.getElementById("frameSub");
+
+    const STATE_KEY = "AGEX_APP_STATE_V2";
+    // state = { mode: "domains" | "items", domainId: string|null, lastUrl: string|null, lastLabel: string|null }
+
+    function loadState(){
+      try{
+        return JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
+      }catch(e){ return {}; }
+    }
+    function saveState(s){
+      localStorage.setItem(STATE_KEY, JSON.stringify(s));
+    }
+
+    function setFrame(url, label){
+      if(url === "#coming-soon"){
+        alert("Coming soon. This district will be filled as we build.");
+        return;
+      }
+      frame.src = url;
+      frameTitle.textContent = label || "AGEx";
+      frameSub.textContent = url;
+      const st = loadState();
+      st.lastUrl = url;
+      st.lastLabel = label || "AGEx";
+      saveState(st);
+    }
+
+    function renderDomains(){
+      navHeader.textContent = "Domains";
+      navSub.textContent = "Choose a domain to open its districts.";
+      backBtn.style.display = "none";
+
+      grid.innerHTML = "";
+      DOMAINS.forEach(d=>{
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.type = "button";
+        btn.innerHTML = `
+          <span class="left">
+            <span class="name">${escapeHtml(d.name)}</span>
+            <span class="tag">${escapeHtml(d.tag || "")}</span>
+          </span>
+          <span class="chev">›</span>
+        `;
+        btn.addEventListener("click", ()=>{
+          const st = loadState();
+          st.mode = "items";
+          st.domainId = d.id;
+          saveState(st);
+          renderItems(d.id);
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    function renderItems(domainId){
+      const domain = DOMAINS.find(x=>x.id === domainId);
+      if(!domain){ renderDomains(); return; }
+
+      navHeader.textContent = domain.name;
+      navSub.textContent = "Choose a district (sub-buttons).";
+      backBtn.style.display = "inline-flex";
+
+      grid.innerHTML = "";
+      domain.items.forEach(it=>{
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.type = "button";
+        btn.innerHTML = `
+          <span class="left">
+            <span class="name">${escapeHtml(it.name)}</span>
+            <span class="tag">${escapeHtml(it.tag || "")}</span>
+          </span>
+          <span class="chev">›</span>
+        `;
+        btn.addEventListener("click", ()=>{
+          setFrame(it.url, it.name);
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    backBtn.addEventListener("click", ()=>{
+      const st = loadState();
+      st.mode = "domains";
+      st.domainId = null;
+      saveState(st);
+      renderDomains();
+    });
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    // =========================
+    // SHARE BUTTON (SAFE)
+    // =========================
+    document.getElementById("shareBtn").addEventListener("click", async ()=>{
+      const url = "https://charlesarin1-creator.github.io/-Agexgrand_plaza/app.html";
+      if(navigator.share){
+        try{
+          await navigator.share({
+            title:"AGEx Grand Plaza",
+            text:"AGEx is a stewardship ecosystem. Install and explore the districts.",
+            url
+          });
+        }catch(e){
+          // user canceled or share failed
+        }
+      }else{
+        try{
+          await navigator.clipboard.writeText(url);
+          alert("Link copied.");
+        }catch(e){
+          alert(url);
+        }
+      }
     });
 
     // =========================
-    // 2) PWA INSTALL PROMPT
+    // PWA INSTALL BUTTON
     // =========================
     let deferredPrompt = null;
     const installBtn = document.getElementById("installBtn");
 
-    window.addEventListener("beforeinstallprompt", (e) => {
+    window.addEventListener("beforeinstallprompt", (e)=>{
       e.preventDefault();
       deferredPrompt = e;
       installBtn.style.display = "inline-flex";
     });
 
-    installBtn.addEventListener("click", async () => {
+    installBtn.addEventListener("click", async ()=>{
       if(!deferredPrompt) return;
       deferredPrompt.prompt();
       await deferredPrompt.userChoice;
@@ -413,313 +560,64 @@
     });
 
     // =========================
-    // 3) SHARE BUTTON (SAFE)
+    // OPEN CURRENT / REFRESH
     // =========================
-    document.getElementById("shareBtn").addEventListener("click", async ()=>{
-      const url = location.href;
-      if(navigator.share){
-        try{
-          await navigator.share({
-            title:"AGEx Grand Plaza",
-            text:"AGEx — a life operating system (installs on your phone).",
-            url
-          });
-        }catch(e){}
-      }else{
-        try{
-          await navigator.clipboard.writeText(url);
-          alert("Link copied. Paste to WhatsApp now.");
-        }catch(e){
-          alert("Copy failed. Please copy the link from your address bar.");
-        }
-      }
-    });
-
-    // =========================
-    // 4) DOMAIN + RESOURCES (WHAT YOU HAVE NOW)
-    // =========================
-    const DOMAINS = [
-      {
-        id:"finance",
-        title:"Finance",
-        subtitle:"Money systems & income",
-        items:[
-          { title:"Smart Money Hub", tag:"Academy", url:"https://charlesarin101.github.io/agexsmartmoneyhub/" },
-          { title:"Income Streams Lab", tag:"Execution Lab", url:"https://charlesarin101.github.io/Income_streams_lab/" },
-          { title:"BigSharks", tag:"Project", url:"https://charlesarin1-creator.github.io/bigsharks-site/" },
-        ]
-      },
-      {
-        id:"home",
-        title:"Home",
-        subtitle:"Family order & stewardship",
-        items:[
-          { title:"The Steward’s Charter", tag:"Family / Finance Order", url:"https://charlesarin101.github.io/the-stewards-charter/" },
-        ]
-      },
-      {
-        id:"marketplace",
-        title:"Marketplace",
-        subtitle:"Provision & store",
-        items:[
-          { title:"The Stigweard’s Provision", tag:"Provision", url:"https://charlesarin1-creator.github.io/the-stigweards-provisions/" },
-          { title:"Arin’s Global Marketplace", tag:"Selfany Store", url:"https://selfany.com/s/arinsglobalmarketplace" },
-        ]
-      },
-      {
-        id:"education",
-        title:"Education",
-        subtitle:"Learning & schools",
-        items:[
-          { title:"Christian Child Academy", tag:"Education", url:"https://charlesarin101.github.io/christianchildacademy_zaria/" },
-        ]
-      },
-      {
-        id:"media",
-        title:"Media",
-        subtitle:"iService & downloads",
-        comingSoon:true,
-        items:[]
-      },
-      {
-        id:"exchangeLife",
-        title:"Exchange Life",
-        subtitle:"AM Encounters & literature",
-        comingSoon:true,
-        items:[]
-      },
-      {
-        id:"foundation",
-        title:"Foundation",
-        subtitle:"Initiatives & support",
-        comingSoon:true,
-        items:[]
-      },
-      {
-        id:"logistics",
-        title:"Logistics",
-        subtitle:"Operations & infrastructure",
-        comingSoon:true,
-        items:[]
-      },
-      {
-        id:"plaza",
-        title:"Grand Plaza",
-        subtitle:"Home district",
-        items:[
-          { title:"Grand Plaza (Home)", tag:"Home", url:"./" },
-        ]
-      }
-    ];
-
-    // =========================
-    // 5) FRAME / NAV ENGINE
-    // =========================
-    const domainGrid = document.getElementById("domainGrid");
-    const resourceGrid = document.getElementById("resourceGrid");
-    const frame = document.getElementById("frame");
-    const frameTitle = document.getElementById("frameTitle");
-    const frameSub = document.getElementById("frameSub");
-    const crumb = document.getElementById("crumb");
-
-    const stateKeyUrl = "AGEX_APP_LAST_URL";
-    const stateKeyDomain = "AGEX_LAST_DOMAIN";
-
-    function setFrame(url, title, tag){
-      frame.src = url;
-      frameTitle.textContent = title || "AGEx";
-      frameSub.textContent = tag ? (tag + " • " + url) : url;
-      localStorage.setItem(stateKeyUrl, url);
+    function currentUrl(){
+      return frame.src || loadState().lastUrl || "";
     }
 
-    function setCrumb(domainTitle, resourceTitle){
-      const d = domainTitle ? `<b>${escapeHtml(domainTitle)}</b>` : `<b>Home</b>`;
-      const r = resourceTitle ? ` → <span>${escapeHtml(resourceTitle)}</span>` : "";
-      crumb.innerHTML = `<span>Now:</span> ${d}${r}`;
-    }
-
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-
-    function tileHtml({title, subtitle, active, right}){
-      return `
-        <button class="tile ${active ? "active":""}" type="button">
-          <span class="left">
-            <span class="name">${escapeHtml(title)}</span>
-            <span class="tag">${escapeHtml(subtitle || "")}</span>
-          </span>
-          <span class="chev">${right || "›"}</span>
-        </button>
-      `;
-    }
-
-    function renderDomains(activeId){
-      domainGrid.innerHTML = "";
-      DOMAINS.forEach(d=>{
-        const wrap = document.createElement("div");
-        wrap.innerHTML = tileHtml({
-          title:d.title,
-          subtitle:d.subtitle,
-          active: d.id === activeId,
-          right:"›"
-        });
-        const btn = wrap.firstElementChild;
-        btn.dataset.domainId = d.id;
-        domainGrid.appendChild(btn);
-      });
-    }
-
-    function renderResources(domainId){
-      const domain = DOMAINS.find(d=>d.id === domainId);
-      if(!domain) return;
-
-      localStorage.setItem(stateKeyDomain, domainId);
-
-      // Show resources grid
-      resourceGrid.classList.remove("hidden");
-      resourceGrid.innerHTML = "";
-
-      document.getElementById("navTitle").textContent = domain.title;
-      document.getElementById("navDesc").textContent = domain.comingSoon
-        ? "This domain is under construction. For now you’ll see Coming Soon."
-        : "Choose a resource. It will load in the display area below.";
-
-      setCrumb(domain.title, "");
-
-      if(domain.comingSoon || !domain.items || domain.items.length === 0){
-        const wrap = document.createElement("div");
-        wrap.innerHTML = tileHtml({
-          title:"Coming Soon",
-          subtitle:"This domain is being built",
-          active:false,
-          right:"⏳"
-        });
-        const btn = wrap.firstElementChild;
-        btn.disabled = true;
-        btn.style.cursor = "not-allowed";
-        btn.style.opacity = ".75";
-        resourceGrid.appendChild(btn);
-        return;
-      }
-
-      domain.items.forEach(item=>{
-        const wrap = document.createElement("div");
-        wrap.innerHTML = tileHtml({
-          title:item.title,
-          subtitle:item.tag || "Resource",
-          active:false,
-          right:"↘"
-        });
-        const btn = wrap.firstElementChild;
-        btn.dataset.url = item.url;
-        btn.dataset.title = item.title;
-        btn.dataset.tag = item.tag || "Resource";
-        resourceGrid.appendChild(btn);
-      });
-    }
-
-    // Domain click
-    domainGrid.addEventListener("click", (e)=>{
-      const tile = e.target.closest(".tile");
-      if(!tile) return;
-
-      const id = tile.dataset.domainId;
-      if(!id) return;
-
-      // highlight active domain
-      [...domainGrid.querySelectorAll(".tile")].forEach(t=>t.classList.remove("active"));
-      tile.classList.add("active");
-
-      renderResources(id);
-    });
-
-    // Resource click
-    resourceGrid.addEventListener("click", (e)=>{
-      const tile = e.target.closest(".tile");
-      if(!tile || tile.disabled) return;
-
-      const url = tile.dataset.url;
-      const title = tile.dataset.title || "AGEx";
-      const tag = tile.dataset.tag || "";
-
-      // highlight active resource
-      [...resourceGrid.querySelectorAll(".tile")].forEach(t=>t.classList.remove("active"));
-      tile.classList.add("active");
-
-      setFrame(url, title, tag);
-
-      // update crumb
-      const domainId = localStorage.getItem(stateKeyDomain);
-      const domain = DOMAINS.find(d=>d.id === domainId);
-      setCrumb(domain?.title || "Home", title);
-    });
-
-    // Home button = show domains, hide resources
-    function goHome(){
-      document.getElementById("navTitle").textContent = "Seven Domains";
-      document.getElementById("navDesc").textContent = "Choose a domain to see what’s inside. Then open any resource below.";
-      resourceGrid.classList.add("hidden");
-      setCrumb("Home", "");
-      localStorage.removeItem(stateKeyDomain);
-
-      // clear active domain highlight
-      [...domainGrid.querySelectorAll(".tile")].forEach(t=>t.classList.remove("active"));
-    }
-    document.getElementById("homeBtn").addEventListener("click", goHome);
-
-    // Frame controls
     function openCurrent(){
-      const url = frame.src || localStorage.getItem(stateKeyUrl) || "https://charlesarin101.github.io/agexsmartmoneyhub/";
+      const url = currentUrl();
+      if(!url){ alert("Choose a district first."); return; }
       window.open(url, "_blank", "noopener");
     }
+
     document.getElementById("openNewTabBtn").addEventListener("click", openCurrent);
     document.getElementById("openNewTabBtnTop").addEventListener("click", openCurrent);
 
     document.getElementById("refreshBtn").addEventListener("click", ()=>{
-      try{ frame.contentWindow.location.reload(); }catch(e){ frame.src = frame.src; }
+      try{ frame.contentWindow.location.reload(); }
+      catch(e){ frame.src = frame.src; }
     });
 
     // =========================
-    // 6) INITIAL LOAD
+    // SIGN OUT
     // =========================
-    renderDomains(null);
+    document.getElementById("signOutBtn").addEventListener("click", async ()=>{
+      try{
+        await supabaseClient.auth.signOut();
+      }catch(e){}
+      location.href = "auth.html";
+    });
 
-    // Default first experience: go straight to Finance resources + load Smart Money Hub
-    const defaultDomain = "finance";
-    const defaultUrl = "https://charlesarin101.github.io/agexsmartmoneyhub/";
+    // =========================
+    // INITIAL LOAD
+    // =========================
+    const st = loadState();
 
-    // If there was a last visited url, restore it — but keep UI clean
-    const lastUrl = localStorage.getItem(stateKeyUrl);
-    const lastDomain = localStorage.getItem(stateKeyDomain);
-
-    if(lastDomain){
-      // highlight that domain + show its resources
-      renderDomains(lastDomain);
-      // mark active domain in UI
-      const active = [...domainGrid.querySelectorAll(".tile")].find(t => t.dataset.domainId === lastDomain);
-      if(active){ active.classList.add("active"); }
-      renderResources(lastDomain);
+    if(st.mode === "items" && st.domainId){
+      renderItems(st.domainId);
     }else{
-      // show finance resources by default
-      renderDomains(defaultDomain);
-      const active = [...domainGrid.querySelectorAll(".tile")].find(t => t.dataset.domainId === defaultDomain);
-      if(active){ active.classList.add("active"); }
-      renderResources(defaultDomain);
+      renderDomains();
     }
 
-    // Load last URL if exists, else default
-    setFrame(lastUrl || defaultUrl, "Smart Money Hub", "Academy");
+    // If there’s a last opened destination, keep it in frame
+    if(st.lastUrl){
+      setFrame(st.lastUrl, st.lastLabel || "AGEx");
+    }else{
+      frameTitle.textContent = "Welcome";
+      frameSub.textContent = "Choose a domain above.";
+      frame.src = "about:blank";
+    }
 
-    // =========================
-    // 7) SERVICE WORKER
-    // =========================
+    // Service worker (optional, if you already have it)
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
     }
   </script>
 </body>
 </html>
+
 
 
 

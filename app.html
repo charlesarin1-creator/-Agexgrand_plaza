@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0B3D2E" />
   <title>AGEx — Grand Plaza (App)</title>
-  <meta name="description" content="AGEx Grand Plaza — app-body for the ecosystem. Enter once. Navigate everything." />
+  <meta name="description" content="AGEx Grand Plaza — a life operating system. Sign in → choose a domain → explore resources." />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
@@ -24,7 +24,7 @@
       --line:rgba(15,15,15,.10);
       --shadow:0 18px 45px rgba(0,0,0,.10);
       --radius:20px;
-      --max:1100px;
+      --max:1120px;
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;height:100%}
@@ -63,31 +63,35 @@
     }
     .brand b{letter-spacing:.2px}
     .sub{font-size:12px;color:rgba(15,15,15,.62);font-weight:800}
+
     .pill{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 12px;border-radius:999px;
       border:1px solid var(--line);
       background:#fff;
-      font-weight:800;
+      font-weight:850;
       font-size:12px;
       color:rgba(15,15,15,.72);
       white-space:nowrap;
     }
     .pill .dot{width:10px;height:10px;border-radius:99px;background:var(--gold);box-shadow:0 0 0 4px rgba(244,180,26,.16)}
+
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
       padding:10px 14px;border-radius:999px;
       border:1px solid var(--line);
       font-weight:900;
       background:#fff;
       cursor:pointer;
       white-space:nowrap;
+      user-select:none;
     }
     .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.65)}
-    .btn.dark{background:var(--green);color:#fff;border-color:transparent}
     .btn.ghost{background:transparent}
+    .btn.dark{background:var(--green);color:#fff;border-color:transparent}
+    .btn:active{transform:translateY(1px)}
 
-    /* App layout: NAV TOP + FRAME BOTTOM */
+    /* Layout */
     .wrap{
       max-width:var(--max);
       margin:0 auto;
@@ -105,7 +109,7 @@
       overflow:hidden;
     }
 
-    /* NAV panel takes at most ~1/3 of screen */
+    /* Top area: Domains + (optional) Category resources */
     .navPanel{
       max-height:34vh;
       overflow:auto;
@@ -128,7 +132,7 @@
     .navHead p{
       margin:6px 0 0;
       color:rgba(15,15,15,.62);
-      font-weight:700;
+      font-weight:720;
       font-size:13px;
       line-height:1.35;
     }
@@ -140,37 +144,40 @@
       justify-content:flex-end;
     }
 
-    /* Compact grid */
-    .navGrid{
+    .grid{
       padding:12px 14px;
       display:grid;
       gap:10px;
-      grid-template-columns:repeat(3, minmax(0, 1fr));
     }
+    .domainGrid{
+      grid-template-columns:repeat(3, minmax(0, 1fr)); /* 7 domains => 3x3 layout feel */
+    }
+    .resourceGrid{
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      padding-top:0;
+    }
+
     .tile{
       border:1px solid var(--line);
       background:#fff;
       border-radius:16px;
-      padding:10px 10px;
+      padding:12px 12px;
       cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      min-height:54px;
+      min-height:58px;
       transition:.12s ease;
+      text-align:left;
+      width:100%;
     }
     .tile:hover{transform:translateY(-1px)}
     .tile.active{
       border-color:rgba(244,180,26,.70);
       box-shadow:0 10px 22px rgba(244,180,26,.18);
     }
-    .tile .left{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      min-width:0;
-    }
+    .tile .left{display:flex;flex-direction:column;gap:3px;min-width:0}
     .tile .name{
       font-weight:950;
       color:#111;
@@ -188,14 +195,28 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .tile .chev{
-      font-weight:950;
-      color:rgba(11,61,46,.85);
-      opacity:.8;
-      flex:0 0 auto;
+    .tile .chev{font-weight:950;color:rgba(11,61,46,.85);opacity:.8;flex:0 0 auto}
+
+    .miniBar{
+      padding:0 14px 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .crumb{
+      display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+      font-weight:900;font-size:12px;color:rgba(15,15,15,.66);
+    }
+    .crumb b{color:var(--green)}
+    .note{
+      font-size:12px;
+      color:rgba(15,15,15,.58);
+      font-weight:750;
     }
 
-    /* Frame panel gets the rest */
+    /* Frame panel */
     .framePanel{
       flex:1;
       display:flex;
@@ -242,28 +263,23 @@
 
     /* Mobile: 2 columns */
     @media (max-width: 720px){
-      .navGrid{grid-template-columns:repeat(2, minmax(0, 1fr))}
-      .navPanel{max-height:38vh}
+      .domainGrid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+      .resourceGrid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+      .navPanel{max-height:40vh}
     }
     @media (max-width: 420px){
-      .navGrid{grid-template-columns:1fr}
+      .domainGrid{grid-template-columns:1fr}
+      .resourceGrid{grid-template-columns:1fr}
       .frameTop .title span{max-width:62vw}
     }
 
-    /* Small toast */
-    .toast{
-      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-      background:#111;color:#fff;
-      padding:10px 12px;border-radius:999px;
-      font-weight:850;font-size:12px;
-      display:none;
-      box-shadow:0 14px 30px rgba(0,0,0,.25);
-      z-index:80;
-    }
+    /* Hidden */
+    .hidden{display:none !important}
   </style>
 </head>
 
 <body>
+  <!-- TOP BAR -->
   <div class="topbar">
     <div class="inner">
       <div class="brand">
@@ -275,127 +291,60 @@
         </div>
         <div>
           <b>AGEx</b><br/>
-          <span class="sub">Grand Plaza • App Body</span>
+          <span class="sub">Grand Plaza • Life Operating System</span>
         </div>
       </div>
 
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
-        <div class="pill"><span class="dot"></span> Login → tap a district → it opens below.</div>
+        <div class="pill" title="Signed in status">
+          <span class="dot"></span>
+          <span id="userChip">Signed in</span>
+        </div>
+
+        <button class="btn gold" id="installBtn" style="display:none">Install</button>
         <button class="btn" id="shareBtn" type="button">Share</button>
-        <a class="btn ghost" href="mailto:arinonebusiness@gmail.com" title="Email support">Support</a>
         <button class="btn dark" id="signOutBtn" type="button">Sign out</button>
       </div>
     </div>
   </div>
 
+  <!-- BODY -->
   <div class="wrap">
 
-    <!-- NAV TOP -->
-    <section class="panel navPanel" aria-label="City map navigation">
+    <!-- DOMAINS + RESOURCES -->
+    <section class="panel navPanel" aria-label="Domains and resources">
       <div class="navHead">
         <div>
-          <h1>The City Map</h1>
-          <p>Choose your next district. (Some districts open in a new tab for security.)</p>
+          <h1 id="navTitle">Seven Domains</h1>
+          <p id="navDesc">Choose a domain to see what’s inside. Then open any resource below.</p>
         </div>
+
         <div class="navHeadRight">
+          <button class="btn" id="homeBtn" type="button">Home</button>
           <button class="btn" id="openNewTabBtnTop" type="button">Open current in new tab</button>
         </div>
       </div>
 
-      <div class="navGrid" id="nav">
-
-        <!-- ORDERED FOR LEARNERS -->
-        <button class="tile active"
-          data-url="https://charlesarin101.github.io/agexsmartmoneyhub/"
-          data-title="Smart Money Hub" data-tag="Academy">
-          <span class="left">
-            <span class="name">Smart Money Hub</span>
-            <span class="tag">Academy</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile"
-          data-url="https://charlesarin101.github.io/the-stewards-charter/"
-          data-title="The Steward’s Charter" data-tag="Finance">
-          <span class="left">
-            <span class="name">The Steward’s Charter</span>
-            <span class="tag">Finance</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile"
-          data-url="https://charlesarin101.github.io/Income_streams_lab/"
-          data-title="Income Streams Lab" data-tag="Lab">
-          <span class="left">
-            <span class="name">Income Streams Lab</span>
-            <span class="tag">Lab</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile"
-          data-url="https://charlesarin1-creator.github.io/the-stigweards-provisions/"
-          data-title="The Stigweard’s Provision" data-tag="Provision">
-          <span class="left">
-            <span class="name">The Stigweard’s Provision</span>
-            <span class="tag">Provision</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <!-- Often blocks iframe → open in new tab -->
-        <button class="tile"
-          data-open="tab"
-          data-url="https://selfany.com/s/arinsglobalmarketplace"
-          data-title="Arin’s Global Marketplace" data-tag="Store">
-          <span class="left">
-            <span class="name">Arin’s Global Marketplace</span>
-            <span class="tag">Store (opens new tab)</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile"
-          data-url="https://charlesarin1-creator.github.io/bigsharks-site/"
-          data-title="BigSharks" data-tag="Project">
-          <span class="left">
-            <span class="name">BigSharks</span>
-            <span class="tag">Project</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile"
-          data-url="https://charlesarin101.github.io/christianchildacademy_zaria/"
-          data-title="Christian Child Academy" data-tag="Education">
-          <span class="left">
-            <span class="name">Christian Child Academy</span>
-            <span class="tag">Education</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
-        <button class="tile"
-          data-url="./"
-          data-title="Grand Plaza" data-tag="Home">
-          <span class="left">
-            <span class="name">Grand Plaza</span>
-            <span class="tag">Home</span>
-          </span>
-          <span class="chev">›</span>
-        </button>
-
+      <div class="miniBar">
+        <div class="crumb" id="crumb">
+          <span>Now:</span> <b>Home</b>
+        </div>
+        <div class="note" id="note">
+          Some areas are still building — they will show “Coming Soon”.
+        </div>
       </div>
+
+      <div class="grid domainGrid" id="domainGrid"></div>
+
+      <div class="grid resourceGrid hidden" id="resourceGrid"></div>
     </section>
 
-    <!-- DISPLAY DOWN -->
+    <!-- DISPLAY -->
     <section class="panel framePanel" aria-label="Display area">
       <div class="frameTop">
         <div class="title">
-          <b id="frameTitle">Smart Money Hub</b>
-          <span id="frameSub">Loading…</span>
+          <b id="frameTitle">Welcome</b>
+          <span id="frameSub">Select a resource to load it here.</span>
         </div>
         <div class="frameBtns">
           <button class="btn" id="refreshBtn" type="button">Refresh</button>
@@ -407,142 +356,370 @@
 
   </div>
 
-  <div class="toast" id="toast"></div>
-
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
 
   <script>
-    // ===== Helpers =====
-    const toast = (msg) => {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.style.display = "block";
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(()=> t.style.display="none", 2400);
-    };
-
-    // ===== Auth guard: must be signed in to use app =====
-    (async function(){
+    // =========================
+    // 1) AUTH GUARD (LOGIN FIRST)
+    // =========================
+    (async function authGuard(){
       try{
         const { data } = await supabaseClient.auth.getSession();
         const session = data?.session;
+
         if(!session){
           location.href = "auth.html";
           return;
         }
+
+        // Show user chip
+        const email = session?.user?.email || "Signed in";
+        document.getElementById("userChip").textContent = email;
+
       }catch(e){
-        // If supabase.js missing/misconfigured
-        toast("Auth setup missing. Check supabase.js");
+        // If something is wrong with supabase setup, force auth page
+        location.href = "auth.html";
       }
     })();
 
-    // ===== Sign out =====
+    // Sign out
     document.getElementById("signOutBtn").addEventListener("click", async ()=>{
-      try{
-        await supabaseClient.auth.signOut();
-      }catch(e){}
+      try{ await supabaseClient.auth.signOut(); }catch(e){}
       localStorage.removeItem("AGEX_APP_LAST_URL");
+      localStorage.removeItem("AGEX_LAST_DOMAIN");
       location.href = "auth.html";
     });
 
-    // ===== Share button (safe) =====
+    // =========================
+    // 2) PWA INSTALL PROMPT
+    // =========================
+    let deferredPrompt = null;
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = "inline-flex";
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if(!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    });
+
+    // =========================
+    // 3) SHARE BUTTON (SAFE)
+    // =========================
     document.getElementById("shareBtn").addEventListener("click", async ()=>{
-      const url = "https://charlesarin1-creator.github.io/-Agexgrand_plaza/app.html";
-      if (navigator.share) {
+      const url = location.href;
+      if(navigator.share){
         try{
           await navigator.share({
-            title: "AGEx Grand Plaza",
-            text: "A stewardship ecosystem that installs on your phone.",
+            title:"AGEx Grand Plaza",
+            text:"AGEx — a life operating system (installs on your phone).",
             url
           });
-        }catch(e){
-          // user canceled
-        }
-      } else {
+        }catch(e){}
+      }else{
         try{
           await navigator.clipboard.writeText(url);
-          toast("Link copied. Paste on WhatsApp.");
+          alert("Link copied. Paste to WhatsApp now.");
         }catch(e){
-          toast("Copy failed. Long-press the address bar to copy.");
+          alert("Copy failed. Please copy the link from your address bar.");
         }
       }
     });
 
-    // ===== App Shell Navigation =====
-    const nav = document.getElementById("nav");
+    // =========================
+    // 4) DOMAIN + RESOURCES (WHAT YOU HAVE NOW)
+    // =========================
+    const DOMAINS = [
+      {
+        id:"finance",
+        title:"Finance",
+        subtitle:"Money systems & income",
+        items:[
+          { title:"Smart Money Hub", tag:"Academy", url:"https://charlesarin101.github.io/agexsmartmoneyhub/" },
+          { title:"Income Streams Lab", tag:"Execution Lab", url:"https://charlesarin101.github.io/Income_streams_lab/" },
+          { title:"BigSharks", tag:"Project", url:"https://charlesarin1-creator.github.io/bigsharks-site/" },
+        ]
+      },
+      {
+        id:"home",
+        title:"Home",
+        subtitle:"Family order & stewardship",
+        items:[
+          { title:"The Steward’s Charter", tag:"Family / Finance Order", url:"https://charlesarin101.github.io/the-stewards-charter/" },
+        ]
+      },
+      {
+        id:"marketplace",
+        title:"Marketplace",
+        subtitle:"Provision & store",
+        items:[
+          { title:"The Stigweard’s Provision", tag:"Provision", url:"https://charlesarin1-creator.github.io/the-stigweards-provisions/" },
+          { title:"Arin’s Global Marketplace", tag:"Selfany Store", url:"https://selfany.com/s/arinsglobalmarketplace" },
+        ]
+      },
+      {
+        id:"education",
+        title:"Education",
+        subtitle:"Learning & schools",
+        items:[
+          { title:"Christian Child Academy", tag:"Education", url:"https://charlesarin101.github.io/christianchildacademy_zaria/" },
+        ]
+      },
+      {
+        id:"media",
+        title:"Media",
+        subtitle:"iService & downloads",
+        comingSoon:true,
+        items:[]
+      },
+      {
+        id:"exchangeLife",
+        title:"Exchange Life",
+        subtitle:"AM Encounters & literature",
+        comingSoon:true,
+        items:[]
+      },
+      {
+        id:"foundation",
+        title:"Foundation",
+        subtitle:"Initiatives & support",
+        comingSoon:true,
+        items:[]
+      },
+      {
+        id:"logistics",
+        title:"Logistics",
+        subtitle:"Operations & infrastructure",
+        comingSoon:true,
+        items:[]
+      },
+      {
+        id:"plaza",
+        title:"Grand Plaza",
+        subtitle:"Home district",
+        items:[
+          { title:"Grand Plaza (Home)", tag:"Home", url:"./" },
+        ]
+      }
+    ];
+
+    // =========================
+    // 5) FRAME / NAV ENGINE
+    // =========================
+    const domainGrid = document.getElementById("domainGrid");
+    const resourceGrid = document.getElementById("resourceGrid");
     const frame = document.getElementById("frame");
     const frameTitle = document.getElementById("frameTitle");
     const frameSub = document.getElementById("frameSub");
-    const stateKey = "AGEX_APP_LAST_URL";
+    const crumb = document.getElementById("crumb");
 
-    function setActive(btn){
-      [...nav.querySelectorAll("button.tile")].forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-    }
+    const stateKeyUrl = "AGEX_APP_LAST_URL";
+    const stateKeyDomain = "AGEX_LAST_DOMAIN";
 
     function setFrame(url, title, tag){
       frame.src = url;
       frameTitle.textContent = title || "AGEx";
       frameSub.textContent = tag ? (tag + " • " + url) : url;
-      localStorage.setItem(stateKey, url);
+      localStorage.setItem(stateKeyUrl, url);
     }
 
-    function openCurrent(){
-      const url = frame.src || localStorage.getItem(stateKey) || "https://charlesarin101.github.io/agexsmartmoneyhub/";
-      window.open(url, "_blank", "noopener");
+    function setCrumb(domainTitle, resourceTitle){
+      const d = domainTitle ? `<b>${escapeHtml(domainTitle)}</b>` : `<b>Home</b>`;
+      const r = resourceTitle ? ` → <span>${escapeHtml(resourceTitle)}</span>` : "";
+      crumb.innerHTML = `<span>Now:</span> ${d}${r}`;
     }
 
-    nav.addEventListener("click", (e)=>{
-      const btn = e.target.closest("button.tile[data-url]");
-      if(!btn) return;
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
 
-      const url = btn.getAttribute("data-url");
-      const title = btn.getAttribute("data-title") || "AGEx";
-      const tag = btn.getAttribute("data-tag") || "";
-      const openMode = btn.getAttribute("data-open") || "";
+    function tileHtml({title, subtitle, active, right}){
+      return `
+        <button class="tile ${active ? "active":""}" type="button">
+          <span class="left">
+            <span class="name">${escapeHtml(title)}</span>
+            <span class="tag">${escapeHtml(subtitle || "")}</span>
+          </span>
+          <span class="chev">${right || "›"}</span>
+        </button>
+      `;
+    }
 
-      setActive(btn);
+    function renderDomains(activeId){
+      domainGrid.innerHTML = "";
+      DOMAINS.forEach(d=>{
+        const wrap = document.createElement("div");
+        wrap.innerHTML = tileHtml({
+          title:d.title,
+          subtitle:d.subtitle,
+          active: d.id === activeId,
+          right:"›"
+        });
+        const btn = wrap.firstElementChild;
+        btn.dataset.domainId = d.id;
+        domainGrid.appendChild(btn);
+      });
+    }
 
-      // If a district blocks iframe, open in new tab
-      if(openMode === "tab"){
-        window.open(url, "_blank", "noopener");
-        toast("Opened in new tab.");
+    function renderResources(domainId){
+      const domain = DOMAINS.find(d=>d.id === domainId);
+      if(!domain) return;
+
+      localStorage.setItem(stateKeyDomain, domainId);
+
+      // Show resources grid
+      resourceGrid.classList.remove("hidden");
+      resourceGrid.innerHTML = "";
+
+      document.getElementById("navTitle").textContent = domain.title;
+      document.getElementById("navDesc").textContent = domain.comingSoon
+        ? "This domain is under construction. For now you’ll see Coming Soon."
+        : "Choose a resource. It will load in the display area below.";
+
+      setCrumb(domain.title, "");
+
+      if(domain.comingSoon || !domain.items || domain.items.length === 0){
+        const wrap = document.createElement("div");
+        wrap.innerHTML = tileHtml({
+          title:"Coming Soon",
+          subtitle:"This domain is being built",
+          active:false,
+          right:"⏳"
+        });
+        const btn = wrap.firstElementChild;
+        btn.disabled = true;
+        btn.style.cursor = "not-allowed";
+        btn.style.opacity = ".75";
+        resourceGrid.appendChild(btn);
         return;
       }
 
-      setFrame(url, title, tag);
+      domain.items.forEach(item=>{
+        const wrap = document.createElement("div");
+        wrap.innerHTML = tileHtml({
+          title:item.title,
+          subtitle:item.tag || "Resource",
+          active:false,
+          right:"↘"
+        });
+        const btn = wrap.firstElementChild;
+        btn.dataset.url = item.url;
+        btn.dataset.title = item.title;
+        btn.dataset.tag = item.tag || "Resource";
+        resourceGrid.appendChild(btn);
+      });
+    }
+
+    // Domain click
+    domainGrid.addEventListener("click", (e)=>{
+      const tile = e.target.closest(".tile");
+      if(!tile) return;
+
+      const id = tile.dataset.domainId;
+      if(!id) return;
+
+      // highlight active domain
+      [...domainGrid.querySelectorAll(".tile")].forEach(t=>t.classList.remove("active"));
+      tile.classList.add("active");
+
+      renderResources(id);
     });
 
+    // Resource click
+    resourceGrid.addEventListener("click", (e)=>{
+      const tile = e.target.closest(".tile");
+      if(!tile || tile.disabled) return;
+
+      const url = tile.dataset.url;
+      const title = tile.dataset.title || "AGEx";
+      const tag = tile.dataset.tag || "";
+
+      // highlight active resource
+      [...resourceGrid.querySelectorAll(".tile")].forEach(t=>t.classList.remove("active"));
+      tile.classList.add("active");
+
+      setFrame(url, title, tag);
+
+      // update crumb
+      const domainId = localStorage.getItem(stateKeyDomain);
+      const domain = DOMAINS.find(d=>d.id === domainId);
+      setCrumb(domain?.title || "Home", title);
+    });
+
+    // Home button = show domains, hide resources
+    function goHome(){
+      document.getElementById("navTitle").textContent = "Seven Domains";
+      document.getElementById("navDesc").textContent = "Choose a domain to see what’s inside. Then open any resource below.";
+      resourceGrid.classList.add("hidden");
+      setCrumb("Home", "");
+      localStorage.removeItem(stateKeyDomain);
+
+      // clear active domain highlight
+      [...domainGrid.querySelectorAll(".tile")].forEach(t=>t.classList.remove("active"));
+    }
+    document.getElementById("homeBtn").addEventListener("click", goHome);
+
+    // Frame controls
+    function openCurrent(){
+      const url = frame.src || localStorage.getItem(stateKeyUrl) || "https://charlesarin101.github.io/agexsmartmoneyhub/";
+      window.open(url, "_blank", "noopener");
+    }
     document.getElementById("openNewTabBtn").addEventListener("click", openCurrent);
     document.getElementById("openNewTabBtnTop").addEventListener("click", openCurrent);
 
     document.getElementById("refreshBtn").addEventListener("click", ()=>{
-      try{ frame.contentWindow.location.reload(); }
-      catch(e){ frame.src = frame.src; }
+      try{ frame.contentWindow.location.reload(); }catch(e){ frame.src = frame.src; }
     });
 
-    // ===== Load last visited or default =====
-    const defaultUrl = "https://charlesarin101.github.io/agexsmartmoneyhub/";
-    const last = localStorage.getItem(stateKey) || defaultUrl;
+    // =========================
+    // 6) INITIAL LOAD
+    // =========================
+    renderDomains(null);
 
-    const match = [...nav.querySelectorAll("button.tile[data-url]")].find(b => b.getAttribute("data-url") === last);
-    if(match){
-      setActive(match);
-      setFrame(last, match.getAttribute("data-title"), match.getAttribute("data-tag"));
+    // Default first experience: go straight to Finance resources + load Smart Money Hub
+    const defaultDomain = "finance";
+    const defaultUrl = "https://charlesarin101.github.io/agexsmartmoneyhub/";
+
+    // If there was a last visited url, restore it — but keep UI clean
+    const lastUrl = localStorage.getItem(stateKeyUrl);
+    const lastDomain = localStorage.getItem(stateKeyDomain);
+
+    if(lastDomain){
+      // highlight that domain + show its resources
+      renderDomains(lastDomain);
+      // mark active domain in UI
+      const active = [...domainGrid.querySelectorAll(".tile")].find(t => t.dataset.domainId === lastDomain);
+      if(active){ active.classList.add("active"); }
+      renderResources(lastDomain);
     }else{
-      const first = nav.querySelector("button.tile[data-url]");
-      setActive(first);
-      setFrame(first.getAttribute("data-url"), first.getAttribute("data-title"), first.getAttribute("data-tag"));
+      // show finance resources by default
+      renderDomains(defaultDomain);
+      const active = [...domainGrid.querySelectorAll(".tile")].find(t => t.dataset.domainId === defaultDomain);
+      if(active){ active.classList.add("active"); }
+      renderResources(defaultDomain);
     }
 
-    // ===== Service Worker =====
+    // Load last URL if exists, else default
+    setFrame(lastUrl || defaultUrl, "Smart Money Hub", "Academy");
+
+    // =========================
+    // 7) SERVICE WORKER
+    // =========================
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
     }
   </script>
 </body>
 </html>
+
 
 

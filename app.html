@@ -578,7 +578,29 @@
       const ok = await checkSessionAndToggle();
       if(!ok) showMsg("Not logged in yet. Open the email link, then return here.");
     });
+    const shareButton = document.createElement('button');
+shareButton.className = "btn";
+shareButton.textContent = "Share Plaza";
 
+shareButton.addEventListener('click', async () => {
+  const shareUrl = window.location.origin + "/-Agexgrand_plaza/app.html";
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'AGEx Grand Plaza',
+        text: 'Explore the AGEx ecosystem.',
+        url: shareUrl
+      });
+    } catch (err) {}
+  } else {
+    await navigator.clipboard.writeText(shareUrl);
+    alert('Link copied to clipboard');
+  }
+});
+
+document.querySelector('.topbar .inner > div:last-child')
+  .appendChild(shareButton);
     // Sign out
     document.getElementById("signOutBtn").addEventListener("click", async ()=>{
       await supabaseClient.auth.signOut();
@@ -672,29 +694,6 @@
         // still boot frame only after login succeeds (onAuthStateChange)
       }
     })();
-   const shareButton = document.createElement('button');
-shareButton.className = "btn";
-shareButton.textContent = "Share Plaza";
-
-shareButton.addEventListener('click', async () => {
-  const shareUrl = window.location.origin + "/-Agexgrand_plaza/app.html";
-
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'AGEx Grand Plaza',
-        text: 'Explore the AGEx ecosystem.',
-        url: shareUrl
-      });
-    } catch (err) {}
-  } else {
-    await navigator.clipboard.writeText(shareUrl);
-    alert('Link copied to clipboard');
-  }
-});
-
-document.querySelector('.topbar .inner > div:last-child')
-  .appendChild(shareButton); 
   </script>
 
 </body>

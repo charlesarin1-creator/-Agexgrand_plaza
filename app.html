@@ -282,7 +282,9 @@
 
 <audio id="plazaAudio" loop preload="auto">
   <source src="B01___03_Matthew_____ENGESVN2DA.mp3" type="audio/mpeg">
-</audio>
+</audio> <button class="btn" id="musicToggle" type="button" aria-pressed="false" title="Toggle music">
+  🎵 Music: Off
+</button>
 
       <div class="actions">
         <button class="btn" id="shareBtn" type="button">Share</button>
@@ -674,7 +676,56 @@
   });
 
   loadPreference();
-</script> 
+</script> <audio id="plazaAudio" preload="auto" loop>
+  <source src="assets/plaza-ambient.mp3" type="audio/mpeg" />
+</audio>
+<script>
+(function(){
+  const audio = document.getElementById("plazaAudio");
+  const btn = document.getElementById("musicToggle");
+  if(!audio || !btn) return;
+
+  const STORE_KEY = "AGEX_PLAZA_MUSIC_ON";
+
+  function setBtn(on){
+    btn.textContent = on ? "🎵 Music: On" : "🎵 Music: Off";
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+
+  // Default: OFF (user can turn ON)
+  const saved = localStorage.getItem(STORE_KEY);
+  if(saved === "1"){
+    // Try to resume (may be blocked until user gesture on some phones)
+    audio.play().then(()=> setBtn(true)).catch(()=> setBtn(false));
+  }else{
+    audio.pause();
+    audio.currentTime = 0;
+    setBtn(false);
+  }
+
+  btn.addEventListener("click", async () => {
+    try{
+      if(audio.paused){
+        await audio.play();        // user gesture unlocks audio on mobile
+        localStorage.setItem(STORE_KEY, "1");
+        setBtn(true);
+      }else{
+        audio.pause();
+        localStorage.setItem(STORE_KEY, "0");
+        setBtn(false);
+      }
+    }catch(e){
+      // If play fails (browser restriction), keep button showing OFF
+      setBtn(false);
+      alert("Tap again to enable music (browser restriction).");
+    }
+  });
+
+  // Keep UI correct if audio stops for any reason
+  audio.addEventListener("pause", ()=> setBtn(false));
+  audio.addEventListener("play", ()=> setBtn(true));
+})();
+</script>
 </body>
 </html>
 

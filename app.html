@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0B3D2E" />
-  <title>AGEx — Grand Plaza (App)</title>
-  <meta name="description" content="AGEx Grand Plaza — app-body for the ecosystem. Sign in → choose a domain → choose a district." />
+  <title>AGEx — Grand Plaza</title>
+  <meta name="description" content="AGEx Grand Plaza — a life operating system. Sign in, then navigate by domains." />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
@@ -17,14 +17,13 @@
       --green:#0B3D2E;
       --green2:#083326;
       --gold:#F4B41A;
-
-      --bg:#0B3D2E;          /* ONE SHADE BACKGROUND */
+      --bg:#F7FAF9;
       --card:#FFFFFF;
       --ink:#0F0F0F;
       --muted:#5F6B66;
       --line:rgba(15,15,15,.10);
       --shadow:0 18px 45px rgba(0,0,0,.10);
-      --radius:18px;
+      --radius:22px;
       --max:1100px;
     }
     *{box-sizing:border-box}
@@ -32,16 +31,20 @@
     body{
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
       color:var(--ink);
-      background: var(--bg);
+      background:
+        radial-gradient(900px 600px at 12% 0%, rgba(244,180,26,.10), transparent 65%),
+        radial-gradient(900px 600px at 88% 10%, rgba(11,61,46,.10), transparent 62%),
+        linear-gradient(180deg,#FBFDFC, var(--bg));
     }
     a{color:inherit;text-decoration:none}
+    button{font-family:inherit}
 
-    /* TOP BAR (MINIMAL) */
+    /* Topbar */
     .topbar{
       position:sticky;top:0;z-index:60;
-      background:rgba(11,61,46,.92);
+      background:rgba(247,250,249,.92);
       backdrop-filter:saturate(180%) blur(10px);
-      border-bottom:1px solid rgba(255,255,255,.14);
+      border-bottom:1px solid var(--line);
     }
     .topbar .inner{
       max-width:var(--max);
@@ -50,47 +53,49 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      gap:12px;
     }
-    .brand{display:flex;align-items:center;gap:10px;min-width:120px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
     .mark{
-      width:38px;height:38px;border-radius:12px;
+      width:38px;height:38px;border-radius:14px;
       display:grid;place-items:center;
       background:linear-gradient(135deg,var(--green),var(--green2));
-      box-shadow:0 10px 22px rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.10);
+      box-shadow:0 10px 22px rgba(11,61,46,.22);
+      flex:0 0 auto;
     }
-    .brand b{letter-spacing:.2px;color:#fff}
-    .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .brandText{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .brandText b{letter-spacing:.2px;font-size:14px}
+    .brandText span{font-size:11px;color:rgba(15,15,15,.62);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    .actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:9px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
+      display:inline-flex;align-items:center;justify-content:center;
+      height:36px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
       font-weight:900;
-      background:rgba(255,255,255,.06);
-      color:#fff;
+      background:#fff;
       cursor:pointer;
       white-space:nowrap;
-      transition:.12s ease;
-      font-size:13px;
+      gap:8px;
     }
-    .btn:hover{transform:translateY(-1px)}
-    .btn.gold{
-      background:rgba(244,180,26,.18);
-      border-color:rgba(244,180,26,.38);
-      color:#fff;
-    }
+    .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.65)}
+    .btn.ghost{background:transparent}
+    .btn.small{padding:0 10px}
+    .btn svg{width:16px;height:16px}
 
-    /* APP WRAP */
+    /* Layout */
     .wrap{
       max-width:var(--max);
       margin:0 auto;
-      padding:12px;
+      padding:14px 12px 18px;
       display:flex;
       flex-direction:column;
-      gap:12px;
-      min-height:calc(100vh - 60px);
+      gap:14px;
+      min-height:calc(100vh - 58px);
     }
+
     .panel{
       background:var(--card);
       border:1px solid var(--line);
@@ -99,123 +104,160 @@
       overflow:hidden;
     }
 
-    /* TOP PANEL (DOMAINS / SUB-DISTRICTS) */
-    .navPanel{
-      max-height:36vh; /* <= roughly one third */
-      overflow:auto;
-    }
-    .navTop{
-      padding:12px 12px 10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      border-bottom:1px solid var(--line);
-      background:#fff;
-    }
-    .navTitle{
-      display:flex;flex-direction:column;gap:3px;min-width:0;
-    }
-    .navTitle b{color:var(--green);font-size:14px}
-    .navTitle span{color:rgba(15,15,15,.60);font-weight:750;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .navControls{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .btnLite{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:9px 12px;border-radius:999px;
-      border:1px solid var(--line);
-      font-weight:900;
-      background:#fff;
-      color:rgba(15,15,15,.80);
-      cursor:pointer;
-      white-space:nowrap;
-      font-size:13px;
-    }
-
-    .grid{
-      padding:12px;
+    /* Main Dashboard (2/4 of screen ~ feels like “buttons only”) */
+    .dash{
+      padding:14px;
       display:grid;
-      gap:10px;
+      gap:12px;
       grid-template-columns:repeat(3, minmax(0, 1fr));
     }
-    @media (max-width: 740px){ .grid{grid-template-columns:repeat(2, minmax(0, 1fr))} }
-    @media (max-width: 420px){ .grid{grid-template-columns:1fr} }
 
     .tile{
       border:1px solid var(--line);
       background:#fff;
-      border-radius:16px;
-      padding:10px 10px;
+      border-radius:18px;
+      padding:12px;
       cursor:pointer;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      min-height:54px;
+      gap:12px;
+      min-height:72px;
       transition:.12s ease;
       text-align:left;
     }
     .tile:hover{transform:translateY(-1px)}
-    .tile .left{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .ico{
+      width:44px;height:44px;border-radius:16px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg, rgba(11,61,46,.10), rgba(244,180,26,.12));
+      border:1px solid rgba(15,15,15,.08);
+      flex:0 0 auto;
+    }
+    .tile .meta{display:flex;flex-direction:column;gap:4px;min-width:0}
     .tile .name{
-      font-weight:950;color:#111;font-size:13px;line-height:1.15;
+      font-weight:950;
+      font-size:14px;
+      letter-spacing:-.2px;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-    .tile .tag{
-      font-weight:850;color:rgba(15,15,15,.55);font-size:11px;
+    .tile .sub{
+      font-size:11px;
+      font-weight:850;
+      color:rgba(15,15,15,.55);
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-    .tile .chev{font-weight:950;color:rgba(11,61,46,.85);opacity:.8;flex:0 0 auto}
+    .chev{
+      margin-left:auto;
+      font-weight:950;
+      color:rgba(11,61,46,.85);
+      opacity:.8;
+      flex:0 0 auto;
+    }
 
-    /* DISPLAY PANEL */
-    .framePanel{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      min-height:46vh;
-    }
-    .frameTop{
-      padding:10px 12px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      background:#fff;
-    }
-    .frameTitle{
-      display:flex;flex-direction:column;gap:2px;min-width:0;
-    }
-    .frameTitle b{color:var(--green);font-size:14px}
-    .frameTitle span{
-      font-size:12px;color:rgba(15,15,15,.60);font-weight:750;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70vw;
-    }
-    iframe{width:100%;flex:1;border:0;background:#fff}
-
-    /* FOOT PANEL */
-    .footPanel{
-      padding:12px;
+    /* Footer (bottom quarter) */
+    .foot{
+      padding:14px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      background:#fff;
     }
-    .footLinks{display:flex;gap:10px;flex-wrap:wrap}
-    .footLinks a{
-      font-size:12px;
-      font-weight:850;
+    .foot a{
+      font-weight:900;
       color:rgba(15,15,15,.70);
+      border-bottom:1px dashed rgba(15,15,15,.25);
+      padding-bottom:2px;
+    }
+    .foot small{
+      color:rgba(15,15,15,.55);
+      font-weight:800;
+    }
+
+    /* Modal (Second Screen) */
+    .overlay{
+      position:fixed;inset:0;
+      background:rgba(11,61,46,.18);
+      backdrop-filter: blur(10px);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index:100;
+      padding:12px;
+    }
+    .sheet{
+      width:min(720px, 100%);
+      background:#fff;
       border:1px solid var(--line);
-      padding:7px 10px;
-      border-radius:999px;
+      border-radius:22px;
+      box-shadow:0 24px 70px rgba(0,0,0,.22);
+      overflow:hidden;
+      max-height:78vh;
+      display:flex;
+      flex-direction:column;
+    }
+    .sheetHead{
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .sheetTitle{
+      display:flex;flex-direction:column;gap:2px;min-width:0
+    }
+    .sheetTitle b{
+      color:var(--green);
+      font-size:15px;
+      letter-spacing:-.2px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .sheetTitle span{
+      font-size:12px;
+      color:rgba(15,15,15,.60);
+      font-weight:800;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .sheetBody{
+      padding:12px 14px;
+      overflow:auto;
+      display:grid;
+      gap:10px;
+    }
+    .subBtn{
+      width:100%;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:12px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      cursor:pointer;
+      text-align:left;
+    }
+    .subBtn b{font-weight:950}
+    .subBtn span{font-size:11px;color:rgba(15,15,15,.55);font-weight:850}
+    .subBtn .right{font-weight:950;color:rgba(11,61,46,.85);opacity:.8}
+    .sheetFoot{
+      padding:12px 14px;
+      border-top:1px solid var(--line);
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
       background:#fff;
     }
-    .footNote{
-      font-size:12px;
-      font-weight:750;
-      color:rgba(15,15,15,.55);
+
+    /* Mobile */
+    @media (max-width: 820px){
+      .dash{grid-template-columns:repeat(2, minmax(0, 1fr))}
+    }
+    @media (max-width: 420px){
+      .dash{grid-template-columns:1fr}
+      .brandText span{display:none}
     }
   </style>
 </head>
@@ -231,63 +273,72 @@
             <path d="M8.3 12h6.9l-2.2-2.2 1.3-1.3 4.4 4.4-4.4 4.4-1.3-1.3 2.2-2.2H8.3V12z" fill="#F4B41A"/>
           </svg>
         </div>
-        <div>
+        <div class="brandText">
           <b>AGEx</b>
+          <span>Grand Plaza • Life Operating System</span>
         </div>
       </div>
 
       <div class="actions">
-        <button class="btn" id="shareBtn" type="button">Share</button>
-        <button class="btn gold" id="installBtn" type="button" style="display:none">Install</button>
-        <button class="btn" id="signOutBtn" type="button">Sign out</button>
+        <button class="btn small" id="shareBtn" type="button" title="Share">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M16 8a3 3 0 1 0-2.9-3.7L8.9 6.7a3 3 0 1 0 0 10.6l4.2 2.4A3 3 0 1 0 14 18l-4.5-2.6a3 3 0 0 0 0-6.8L14 6a3 3 0 0 0 2 2z" stroke="rgba(15,15,15,.75)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Share
+        </button>
+
+        <button class="btn gold small" id="installBtn" style="display:none" type="button">Install</button>
+
+        <button class="btn small" id="signOutBtn" type="button" title="Sign out">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M10 7V6a2 2 0 0 1 2-2h7v16h-7a2 2 0 0 1-2-2v-1" stroke="rgba(15,15,15,.75)" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M4 12h10m0 0-3-3m3 3-3 3" stroke="rgba(11,61,46,.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Sign out
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="wrap">
+  <main class="wrap">
 
-    <!-- NAV TOP: DOMAINS / SUB-DISTRICTS -->
-    <section class="panel navPanel" aria-label="Domains navigation">
-      <div class="navTop">
-        <div class="navTitle">
-          <b id="navHeader">Domains</b>
-          <span id="navSub">Choose a domain to open its districts.</span>
-        </div>
-
-        <div class="navControls">
-          <button class="btnLite" id="backBtn" type="button" style="display:none">← Back</button>
-          <button class="btnLite" id="openNewTabBtnTop" type="button">Open current</button>
-        </div>
-      </div>
-
-      <div class="grid" id="grid"></div>
+    <!-- DOMAIN GRID (buttons only) -->
+    <section class="panel" aria-label="AGEx domains">
+      <div class="dash" id="domainGrid"></div>
     </section>
 
-    <!-- DISPLAY DOWN -->
-    <section class="panel framePanel" aria-label="Display area">
-      <div class="frameTop">
-        <div class="frameTitle">
-          <b id="frameTitle">Welcome</b>
-          <span id="frameSub">Choose a domain above.</span>
+    <!-- FOOTER (bottom quarter) -->
+    <section class="panel" aria-label="Support and policies">
+      <div class="foot">
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <a href="support.html">Support</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
         </div>
-        <div class="navControls">
-          <button class="btnLite" id="refreshBtn" type="button">Refresh</button>
-          <button class="btnLite" id="openNewTabBtn" type="button">Open current</button>
-        </div>
+        <small>© <span id="yr"></span> AGEx</small>
       </div>
-      <iframe id="frame" title="AGEx Content"></iframe>
     </section>
 
-    <!-- FOOT -->
-    <section class="panel footPanel" aria-label="Support links">
-      <div class="footLinks">
-        <a href="mailto:arinonebusiness@gmail.com">Support</a>
-        <a href="#" onclick="alert('Privacy page coming soon.');return false;">Privacy</a>
-        <a href="#" onclick="alert('Terms page coming soon.');return false;">Terms</a>
-      </div>
-      <div class="footNote">AGEx • App Shell • GitHub Pages</div>
-    </section>
+  </main>
 
+  <!-- SECOND SCREEN (SUB-BUTTONS) -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Domain details">
+    <div class="sheet">
+      <div class="sheetHead">
+        <div class="sheetTitle">
+          <b id="sheetName">Domain</b>
+          <span id="sheetSub">Choose a district</span>
+        </div>
+        <button class="btn" id="closeSheet" type="button">Close</button>
+      </div>
+
+      <div class="sheetBody" id="sheetBody"></div>
+
+      <div class="sheetFoot">
+        <button class="btn" id="openDomainHome" type="button" style="display:none">Open domain page</button>
+        <button class="btn gold" id="openSelected" type="button" style="display:none">Open selected</button>
+      </div>
+    </div>
   </div>
 
   <!-- Supabase -->
@@ -295,10 +346,8 @@
   <script src="supabase.js"></script>
 
   <script>
-    // =========================
-    // AUTH GUARD (current behavior)
-    // =========================
-    (async function authGuard(){
+    // ========= 0) AUTH GUARD =========
+    (async function(){
       try{
         const { data } = await supabaseClient.auth.getSession();
         const session = data?.session;
@@ -307,250 +356,219 @@
           return;
         }
       }catch(e){
-        // If supabase is not loading correctly, still fail-safe to auth
+        // If anything fails, fail-closed to auth
         location.href = "auth.html";
+        return;
       }
     })();
 
-    // =========================
-    // DATA: DOMAINS + SUB-DISTRICTS
-    // (Edit names and links here only)
-    // =========================
+    // ========= 1) DATA MODEL (Domains -> Sub-buttons) =========
+    // NOTE: Grand Plaza removed because the app IS the plaza.
     const DOMAINS = [
-  {
-    id:"finance",
-    name:"Finance",
-    tag:"Smart Money • Lab • Business",
-    items:[
-      { name:"Smart Money Hub", tag:"Academy", url:"https://charlesarin101.github.io/agexsmartmoneyhub/" },
-      { name:"Income Stack Lab", tag:"Execution", url:"https://charlesarin101.github.io/Income_streams_lab/" },
-      { name:"BigSharks", tag:"Business", url:"https://charlesarin1-creator.github.io/bigsharks-site/" },
-    ]
-  },
+      {
+        key: "finance",
+        name: "Finance",
+        sub: "Stewardship money systems",
+        icon: "💰",
+        items: [
+          { label: "Smart Money Hub", note: "Academy", url: "https://charlesarin101.github.io/agexsmartmoneyhub/" },
+          { label: "Income Streams Lab", note: "Lab", url: "https://charlesarin101.github.io/Income_streams_lab/" },
+          { label: "BigSharks", note: "Project", url: "https://charlesarin1-creator.github.io/bigsharks-site/" }
+        ]
+      },
+      {
+        key: "home",
+        name: "Home",
+        sub: "Family, home, household systems",
+        icon: "🏠",
+        items: [
+          { label: "HomExecutive", note: "Home solutions", url: "https://charlesarin1-creator.github.io/HomExecutive/" },
+          { label: "The Steward’s Charter", note: "Family finance charter", url: "https://charlesarin101.github.io/the-stewards-charter/" }
+        ]
+      },
+      {
+        key: "marketplace",
+        name: "Marketplace",
+        sub: "Store and exchange",
+        icon: "🛒",
+        items: [
+          { label: "Arin’s Global Marketplace", note: "Store", url: "https://selfany.com/s/arinsglobalmarketplace" }
+        ]
+      },
+      {
+        key: "media",
+        name: "Media / IT",
+        sub: "Tools, media, systems",
+        icon: "🖥️",
+        items: [
+          { label: "iService.com", note: "Media/IT platform", url: "https://charlesarin1-creator.github.io/iservice.com/" }
+        ]
+      },
+      {
+        key: "logistics",
+        name: "Logistics",
+        sub: "Delivery, logistics, supply",
+        icon: "🚚",
+        items: [
+          { label: "Ringo.com", note: "Water & logistics", url: "https://charlesarin1-creator.github.io/Ringo.com/" }
+        ]
+      },
+      {
+        key: "education",
+        name: "Education",
+        sub: "Learning and schooling",
+        icon: "🎓",
+        items: [
+          { label: "Christian Child Academy", note: "Education", url: "https://charlesarin101.github.io/christianchildacademy_zaria/" }
+        ]
+      },
+      {
+        key: "exchange_life",
+        name: "Exchange Life",
+        sub: "Encounters & transformation",
+        icon: "✨",
+        items: [
+          { label: "Kingdom MTT 6:33", note: "Spiritual resources", url: "https://charlesarin1-creator.github.io/Kingdom-mtt633/" }
+        ]
+      },
+      {
+        key: "foundation",
+        name: "Foundation",
+        sub: "Giving & future programs",
+        icon: "🏛️",
+        items: [
+          { label: "Coming Soon", note: "Foundation hub is being built", url: "" }
+        ]
+      }
+    ];
 
-  {
-    id:"home",
-    name:"Home",
-    tag:"Family • Order • Living",
-    items:[
-      { name:"HomExecutive", tag:"Home Solutions", url:"https://charlesarin1-creator.github.io/HomExecutive/" },
-      { name:"The Steward’s Charter", tag:"Charter", url:"https://charlesarin101.github.io/the-stewards-charter/" },
-      { name:"Steward Lodge Gate", tag:"Members", url:"https://charlesarin101.github.io/agexsmartmoneyhub/lodge.html?v=2" },
-    ]
-  },
+    // ========= 2) RENDER GRID =========
+    const grid = document.getElementById("domainGrid");
+    const overlay = document.getElementById("overlay");
+    const sheetName = document.getElementById("sheetName");
+    const sheetSub = document.getElementById("sheetSub");
+    const sheetBody = document.getElementById("sheetBody");
 
-  {
-    id:"marketplace",
-    name:"Marketplace",
-    tag:"Provision • Store",
-    items:[
-      { name:"Arin’s Global Marketplace", tag:"Store", url:"https://selfany.com/s/arinsglobalmarketplace" },
-      { name:"The Stigweard’s Provision", tag:"Provision", url:"https://charlesarin1-creator.github.io/the-stigweards-provisions/" },
-      { name:"Coming Soon", tag:"", url:"#coming-soon" },
-    ]
-  },
+    let currentDomain = null;
+    let selectedItem = null;
 
-  {
-    id:"education",
-    name:"Education",
-    tag:"Academy • Learning",
-    items:[
-      { name:"Christian Child Academy", tag:"School", url:"https://charlesarin101.github.io/christianchildacademy_zaria/" },
-      { name:"Smart Money Hub", tag:"Academy", url:"https://charlesarin101.github.io/agexsmartmoneyhub/" },
-      { name:"Coming Soon", tag:"", url:"#coming-soon" },
-    ]
-  },
+    function tileHTML(d){
+      return `
+        <button class="tile" type="button" data-key="${d.key}">
+          <div class="ico" aria-hidden="true" title="${d.name}">
+            <span style="font-size:20px">${d.icon}</span>
+          </div>
+          <div class="meta">
+            <div class="name">${d.name}</div>
+            <div class="sub">${d.sub}</div>
+          </div>
+          <div class="chev">›</div>
+        </button>
+      `;
+    }
 
-  {
-    id:"media",
-    name:"Media",
-    tag:"iService • Resources",
-    items:[
-      { name:"iService", tag:"Media Hub", url:"https://charlesarin1-creator.github.io/iservice.com/" },
-      { name:"Crystal Literature", tag:"Coming soon", url:"#coming-soon" },
-      { name:"Coming Soon", tag:"", url:"#coming-soon" },
-    ]
-  },
+    grid.innerHTML = DOMAINS.map(tileHTML).join("");
 
-  {
-    id:"exchangeLife",
-    name:"Exchange Life",
-    tag:"Kingdom • Transformation",
-    items:[
-      { name:"Kingdom (MTT 6:33)", tag:"Exchange Life", url:"https://charlesarin1-creator.github.io/Kingdom-mtt633/" },
-      { name:"Encounters", tag:"Coming soon", url:"#coming-soon" },
-      { name:"Frequency", tag:"Coming soon", url:"#coming-soon" },
-    ]
-  },
+    // ========= 3) OPEN DOMAIN SHEET =========
+    function openSheet(domain){
+      currentDomain = domain;
+      selectedItem = null;
 
-  {
-    id:"foundation",
-    name:"Foundation",
-    tag:"Giving • Legacy",
-    items:[
-      { name:"Foundation Hub", tag:"Coming soon", url:"#coming-soon" },
-      { name:"Partners", tag:"Coming soon", url:"#coming-soon" },
-      { name:"Coming Soon", tag:"", url:"#coming-soon" },
-    ]
-  },
+      sheetName.textContent = domain.name;
+      sheetSub.textContent = "Choose a district";
 
-  {
-    id:"logistics",
-    name:"Logistics",
-    tag:"Operations • Movement",
-    items:[
-      { name:"Ringo", tag:"Logistics", url:"https://charlesarin1-creator.github.io/Ringo.com/" },
-      { name:"Logistics Desk", tag:"Coming soon", url:"#coming-soon" },
-      { name:"Trusted Operator", tag:"Coming soon", url:"#coming-soon" },
-    ]
-  
-  }
-];
+      sheetBody.innerHTML = domain.items.map((it, idx) => {
+        const disabled = !it.url;
+        return `
+          <button class="subBtn" type="button" data-idx="${idx}" ${disabled ? "disabled style='opacity:.55;cursor:not-allowed'" : ""}>
+            <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+              <b>${it.label}</b>
+              <span>${it.note || ""}</span>
+            </div>
+            <div class="right">${disabled ? "…" : "›"}</div>
+          </button>
+        `;
+      }).join("");
 
+      document.getElementById("openDomainHome").style.display = "none";
+      document.getElementById("openSelected").style.display = "none";
 
-    // =========================
-    // UI STATE
-    // =========================
-    const grid = document.getElementById("grid");
-    const navHeader = document.getElementById("navHeader");
-    const navSub = document.getElementById("navSub");
-    const backBtn = document.getElementById("backBtn");
+      overlay.style.display = "flex";
+    }
 
-    const frame = document.getElementById("frame");
-    const frameTitle = document.getElementById("frameTitle");
-    const frameSub = document.getElementById("frameSub");
+    function closeSheet(){
+      overlay.style.display = "none";
+      currentDomain = null;
+      selectedItem = null;
+    }
 
-    const STATE_KEY = "AGEX_APP_STATE_V2";
-    // state = { mode: "domains" | "items", domainId: string|null, lastUrl: string|null, lastLabel: string|null }
+    grid.addEventListener("click", (e) => {
+      const btn = e.target.closest("button.tile[data-key]");
+      if(!btn) return;
+      const key = btn.getAttribute("data-key");
+      const domain = DOMAINS.find(d => d.key === key);
+      if(domain) openSheet(domain);
+    });
 
-    function loadState(){
+    document.getElementById("closeSheet").addEventListener("click", closeSheet);
+    overlay.addEventListener("click", (e) => {
+      if(e.target === overlay) closeSheet();
+    });
+
+    // Select sub item
+    sheetBody.addEventListener("click", (e) => {
+      const b = e.target.closest("button.subBtn[data-idx]");
+      if(!b || !currentDomain) return;
+
+      const idx = Number(b.getAttribute("data-idx"));
+      const item = currentDomain.items[idx];
+      if(!item?.url) return;
+
+      selectedItem = item;
+      // highlight selection
+      [...sheetBody.querySelectorAll(".subBtn")].forEach(x => x.style.borderColor = "rgba(15,15,15,.10)");
+      b.style.borderColor = "rgba(244,180,26,.70)";
+
+      document.getElementById("openSelected").style.display = "inline-flex";
+    });
+
+    document.getElementById("openSelected").addEventListener("click", () => {
+      if(!selectedItem?.url) return;
+      window.open(selectedItem.url, "_blank", "noopener");
+    });
+
+    // ========= 4) SHARE BUTTON =========
+    const APP_URL = location.href; // shares current URL (works for PWA + browser)
+    document.getElementById("shareBtn").addEventListener("click", async () => {
+      const shareData = {
+        title: "AGEx Grand Plaza",
+        text: "AGEx — a life operating system. Install and navigate by domains.",
+        url: APP_URL
+      };
+
       try{
-        return JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
-      }catch(e){ return {}; }
-    }
-    function saveState(s){
-      localStorage.setItem(STATE_KEY, JSON.stringify(s));
-    }
-
-    function setFrame(url, label){
-      if(url === "#coming-soon"){
-        alert("Coming soon. This district will be filled as we build.");
-        return;
-      }
-      frame.src = url;
-      frameTitle.textContent = label || "AGEx";
-      frameSub.textContent = url;
-      const st = loadState();
-      st.lastUrl = url;
-      st.lastLabel = label || "AGEx";
-      saveState(st);
-    }
-
-    function renderDomains(){
-      navHeader.textContent = "Domains";
-      navSub.textContent = "Choose a domain to open its districts.";
-      backBtn.style.display = "none";
-
-      grid.innerHTML = "";
-      DOMAINS.forEach(d=>{
-        const btn = document.createElement("button");
-        btn.className = "tile";
-        btn.type = "button";
-        btn.innerHTML = `
-          <span class="left">
-            <span class="name">${escapeHtml(d.name)}</span>
-            <span class="tag">${escapeHtml(d.tag || "")}</span>
-          </span>
-          <span class="chev">›</span>
-        `;
-        btn.addEventListener("click", ()=>{
-          const st = loadState();
-          st.mode = "items";
-          st.domainId = d.id;
-          saveState(st);
-          renderItems(d.id);
-        });
-        grid.appendChild(btn);
-      });
-    }
-
-    function renderItems(domainId){
-      const domain = DOMAINS.find(x=>x.id === domainId);
-      if(!domain){ renderDomains(); return; }
-
-      navHeader.textContent = domain.name;
-      navSub.textContent = "Choose a district (sub-buttons).";
-      backBtn.style.display = "inline-flex";
-
-      grid.innerHTML = "";
-      domain.items.forEach(it=>{
-        const btn = document.createElement("button");
-        btn.className = "tile";
-        btn.type = "button";
-        btn.innerHTML = `
-          <span class="left">
-            <span class="name">${escapeHtml(it.name)}</span>
-            <span class="tag">${escapeHtml(it.tag || "")}</span>
-          </span>
-          <span class="chev">›</span>
-        `;
-        btn.addEventListener("click", ()=>{
-          setFrame(it.url, it.name);
-        });
-        grid.appendChild(btn);
-      });
-    }
-
-    backBtn.addEventListener("click", ()=>{
-      const st = loadState();
-      st.mode = "domains";
-      st.domainId = null;
-      saveState(st);
-      renderDomains();
-    });
-
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-
-    // =========================
-    // SHARE BUTTON (SAFE)
-    // =========================
-    document.getElementById("shareBtn").addEventListener("click", async ()=>{
-      const url = "https://charlesarin1-creator.github.io/-Agexgrand_plaza/app.html";
-      if(navigator.share){
-        try{
-          await navigator.share({
-            title:"AGEx Grand Plaza",
-            text:"AGEx is a stewardship ecosystem. Install and explore the districts.",
-            url
-          });
-        }catch(e){
-          // user canceled or share failed
-        }
-      }else{
-        try{
-          await navigator.clipboard.writeText(url);
+        if(navigator.share){
+          await navigator.share(shareData);
+        }else{
+          await navigator.clipboard.writeText(APP_URL);
           alert("Link copied.");
-        }catch(e){
-          alert(url);
         }
+      }catch(e){
+        // user cancelled
       }
     });
 
-    // =========================
-    // PWA INSTALL BUTTON
-    // =========================
+    // ========= 5) INSTALL BUTTON (PWA) =========
     let deferredPrompt = null;
     const installBtn = document.getElementById("installBtn");
 
-    window.addEventListener("beforeinstallprompt", (e)=>{
+    window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.style.display = "inline-flex";
     });
 
-    installBtn.addEventListener("click", async ()=>{
+    installBtn.addEventListener("click", async () => {
       if(!deferredPrompt) return;
       deferredPrompt.prompt();
       await deferredPrompt.userChoice;
@@ -558,64 +576,25 @@
       installBtn.style.display = "none";
     });
 
-    // =========================
-    // OPEN CURRENT / REFRESH
-    // =========================
-    function currentUrl(){
-      return frame.src || loadState().lastUrl || "";
-    }
-
-    function openCurrent(){
-      const url = currentUrl();
-      if(!url){ alert("Choose a district first."); return; }
-      window.open(url, "_blank", "noopener");
-    }
-
-    document.getElementById("openNewTabBtn").addEventListener("click", openCurrent);
-    document.getElementById("openNewTabBtnTop").addEventListener("click", openCurrent);
-
-    document.getElementById("refreshBtn").addEventListener("click", ()=>{
-      try{ frame.contentWindow.location.reload(); }
-      catch(e){ frame.src = frame.src; }
-    });
-
-    // =========================
-    // SIGN OUT
-    // =========================
-    document.getElementById("signOutBtn").addEventListener("click", async ()=>{
+    // ========= 6) SIGN OUT =========
+    document.getElementById("signOutBtn").addEventListener("click", async () => {
       try{
         await supabaseClient.auth.signOut();
       }catch(e){}
       location.href = "auth.html";
     });
 
-    // =========================
-    // INITIAL LOAD
-    // =========================
-    const st = loadState();
-
-    if(st.mode === "items" && st.domainId){
-      renderItems(st.domainId);
-    }else{
-      renderDomains();
-    }
-
-    // If there’s a last opened destination, keep it in frame
-    if(st.lastUrl){
-      setFrame(st.lastUrl, st.lastLabel || "AGEx");
-    }else{
-      frameTitle.textContent = "Welcome";
-      frameSub.textContent = "Choose a domain above.";
-      frame.src = "about:blank";
-    }
-
-    // Service worker (optional, if you already have it)
+    // ========= 7) SERVICE WORKER =========
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
     }
+
+    // Footer year
+    document.getElementById("yr").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
+
 
 
 

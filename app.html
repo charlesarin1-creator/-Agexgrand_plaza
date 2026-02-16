@@ -4,8 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0B3D2E" />
-  <title>AGEx — Grand Plaza</title>
-  <meta name="description" content="AGEx Grand Plaza — a life operating system. Sign in, then navigate by domains." />
+  <title>AGEx — Grand Plaza (App)</title>
+  <meta name="description" content="AGEx Grand Plaza — a life operating system. Sign in, then navigate the domains." />
+  <meta name="robots" content="index,follow" />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
@@ -16,40 +17,41 @@
     :root{
       --green:#0B3D2E;
       --green2:#083326;
+      --green3:#114B39;
       --gold:#F4B41A;
-      --bg:#F7FAF9;
-      --card:#FFFFFF;
-      --ink:#0F0F0F;
-      --muted:#5F6B66;
-      --line:rgba(15,15,15,.10);
-      --shadow:0 18px 45px rgba(0,0,0,.10);
+      --gold2:#d79d13;
+      --white:#ffffff;
+      --muted:rgba(255,255,255,.78);
+      --line:rgba(255,255,255,.14);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
       --radius:22px;
       --max:1100px;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;height:100%}
+    html,body{height:100%;margin:0;padding:0}
     body{
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--ink);
+      color:var(--white);
       background:
-        radial-gradient(900px 600px at 12% 0%, rgba(244,180,26,.10), transparent 65%),
-        radial-gradient(900px 600px at 88% 10%, rgba(11,61,46,.10), transparent 62%),
-        linear-gradient(180deg,#FBFDFC, var(--bg));
+        radial-gradient(900px 600px at 14% 0%, rgba(244,180,26,.12), transparent 65%),
+        radial-gradient(900px 650px at 86% 12%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(700px 520px at 50% 95%, rgba(0,0,0,.22), transparent 65%),
+        linear-gradient(160deg, var(--green3) 0%, var(--green) 45%, var(--green2) 100%);
     }
     a{color:inherit;text-decoration:none}
     button{font-family:inherit}
 
-    /* Topbar */
+    /* Top bar */
     .topbar{
       position:sticky;top:0;z-index:60;
-      background:rgba(247,250,249,.92);
-      backdrop-filter:saturate(180%) blur(10px);
+      background:rgba(11,61,46,.78);
+      backdrop-filter:saturate(160%) blur(10px);
       border-bottom:1px solid var(--line);
     }
     .topbar .inner{
       max-width:var(--max);
       margin:0 auto;
-      padding:10px 12px;
+      padding:12px 14px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -57,213 +59,207 @@
     }
     .brand{display:flex;align-items:center;gap:10px;min-width:0}
     .mark{
-      width:38px;height:38px;border-radius:14px;
+      width:40px;height:40px;border-radius:14px;
       display:grid;place-items:center;
-      background:linear-gradient(135deg,var(--green),var(--green2));
-      box-shadow:0 10px 22px rgba(11,61,46,.22);
+      background:linear-gradient(135deg,var(--green3),var(--green2));
+      box-shadow:0 10px 22px rgba(0,0,0,.30);
+      border:1px solid rgba(255,255,255,.10);
       flex:0 0 auto;
     }
-    .brandText{display:flex;flex-direction:column;gap:2px;min-width:0}
-    .brandText b{letter-spacing:.2px;font-size:14px}
-    .brandText span{font-size:11px;color:rgba(15,15,15,.62);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brandTitle{min-width:0}
+    .brandTitle b{letter-spacing:.2px}
+    .sub{font-size:12px;color:rgba(255,255,255,.75);font-weight:800}
 
-    .actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .actions{
+      display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end
+    }
+
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      height:36px;
-      padding:0 12px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:10px 14px;border-radius:999px;
       border:1px solid var(--line);
       font-weight:900;
-      background:#fff;
+      background:rgba(255,255,255,.06);
+      color:var(--white);
       cursor:pointer;
       white-space:nowrap;
-      gap:8px;
+      transition:.15s ease;
     }
-    .btn.gold{background:var(--gold);border-color:rgba(244,180,26,.65)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn.gold{
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold2) 100%);
+      border-color:rgba(244,180,26,.55);
+      color:#0b0b0b;
+      box-shadow:0 10px 22px rgba(244,180,26,.18);
+    }
     .btn.ghost{background:transparent}
-    .btn.small{padding:0 10px}
-    .btn svg{width:16px;height:16px}
 
     /* Layout */
     .wrap{
       max-width:var(--max);
       margin:0 auto;
-      padding:14px 12px 18px;
+      padding:14px;
       display:flex;
       flex-direction:column;
       gap:14px;
-      min-height:calc(100vh - 58px);
+      min-height:calc(100vh - 64px);
     }
 
     .panel{
-      background:var(--card);
       border:1px solid var(--line);
       border-radius:var(--radius);
+      overflow:hidden;
       box-shadow:var(--shadow);
-      overflow:hidden;
+      background:rgba(255,255,255,.05);
     }
 
-    /* Main Dashboard (2/4 of screen ~ feels like “buttons only”) */
-    .dash{
+    /* Dashboard (top 2/3) */
+    .dashPanel{
       padding:14px;
+    }
+    .dashGrid{
       display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
       gap:12px;
-      grid-template-columns:repeat(3, minmax(0, 1fr));
     }
-
-    .tile{
-      border:1px solid var(--line);
-      background:#fff;
+    .domainBtn{
+      width:100%;
+      border:none;
       border-radius:18px;
-      padding:12px;
+      padding:18px 14px;
       cursor:pointer;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-height:72px;
-      transition:.12s ease;
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold2) 100%);
+      color:#0b0b0b;
+      font-weight:950;
       text-align:left;
-    }
-    .tile:hover{transform:translateY(-1px)}
-    .ico{
-      width:44px;height:44px;border-radius:16px;
-      display:grid;place-items:center;
-      background:linear-gradient(135deg, rgba(11,61,46,.10), rgba(244,180,26,.12));
-      border:1px solid rgba(15,15,15,.08);
-      flex:0 0 auto;
-    }
-    .tile .meta{display:flex;flex-direction:column;gap:4px;min-width:0}
-    .tile .name{
-      font-weight:950;
-      font-size:14px;
-      letter-spacing:-.2px;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .tile .sub{
-      font-size:11px;
-      font-weight:850;
-      color:rgba(15,15,15,.55);
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .chev{
-      margin-left:auto;
-      font-weight:950;
-      color:rgba(11,61,46,.85);
-      opacity:.8;
-      flex:0 0 auto;
-    }
-
-    /* Footer (bottom quarter) */
-    .foot{
-      padding:14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .foot a{
-      font-weight:900;
-      color:rgba(15,15,15,.70);
-      border-bottom:1px dashed rgba(15,15,15,.25);
-      padding-bottom:2px;
-    }
-    .foot small{
-      color:rgba(15,15,15,.55);
-      font-weight:800;
-    }
-
-    /* Modal (Second Screen) */
-    .overlay{
-      position:fixed;inset:0;
-      background:rgba(11,61,46,.18);
-      backdrop-filter: blur(10px);
-      display:none;
-      align-items:flex-end;
-      justify-content:center;
-      z-index:100;
-      padding:12px;
-    }
-    .sheet{
-      width:min(720px, 100%);
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:22px;
-      box-shadow:0 24px 70px rgba(0,0,0,.22);
+      box-shadow:0 10px 22px rgba(0,0,0,.25);
+      transition:.15s ease;
+      position:relative;
       overflow:hidden;
-      max-height:78vh;
+    }
+    .domainBtn:before{
+      content:"";
+      position:absolute;inset:-40% -30%;
+      background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%);
+      transform:rotate(8deg);
+      opacity:.75;
+      pointer-events:none;
+    }
+    .domainBtn:active{transform:scale(.98)}
+    .domainTop{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .domainName{font-size:16px;letter-spacing:.2px}
+    .chev{font-weight:950;opacity:.85}
+    .domainHint{
+      margin-top:6px;
+      font-size:12px;
+      font-weight:850;
+      color:rgba(0,0,0,.72);
+    }
+
+    /* Sub-screen */
+    .subPanel{
+      display:none;
+      padding:14px;
+    }
+    .subHead{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:12px;
+    }
+    .subHead b{font-size:16px}
+    .subGrid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+    .subBtn{
+      width:100%;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:18px;
+      padding:14px 14px;
+      cursor:pointer;
+      background:rgba(255,255,255,.06);
+      color:var(--white);
+      font-weight:900;
+      text-align:left;
+      transition:.15s ease;
+    }
+    .subBtn:hover{transform:translateY(-1px)}
+    .subBtn:active{transform:translateY(0)}
+    .subTag{display:block;margin-top:6px;color:rgba(255,255,255,.75);font-size:12px;font-weight:800}
+
+    /* Viewer (bottom 1/3) */
+    .viewerPanel{
       display:flex;
       flex-direction:column;
+      min-height:34vh;
+      background:rgba(0,0,0,.12);
     }
-    .sheetHead{
+    .viewerTop{
       padding:12px 14px;
       border-bottom:1px solid var(--line);
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      gap:12px;
+      background:rgba(255,255,255,.04);
     }
-    .sheetTitle{
-      display:flex;flex-direction:column;gap:2px;min-width:0
+    .viewerTitle{
+      display:flex;flex-direction:column;gap:4px;min-width:0
     }
-    .sheetTitle b{
-      color:var(--green);
-      font-size:15px;
-      letter-spacing:-.2px;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .sheetTitle span{
+    .viewerTitle b{color:var(--white)}
+    .viewerTitle span{
       font-size:12px;
-      color:rgba(15,15,15,.60);
-      font-weight:800;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      color:rgba(255,255,255,.72);
+      font-weight:750;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:72vw;
     }
-    .sheetBody{
-      padding:12px 14px;
-      overflow:auto;
-      display:grid;
-      gap:10px;
-    }
-    .subBtn{
+    .viewerBtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    iframe{
       width:100%;
-      border:1px solid var(--line);
+      flex:1;
+      border:0;
       background:#fff;
-      border-radius:16px;
-      padding:12px 12px;
+    }
+
+    /* Footer (policy + support) */
+    .footerPanel{
+      padding:12px 14px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      cursor:pointer;
-      text-align:left;
-    }
-    .subBtn b{font-weight:950}
-    .subBtn span{font-size:11px;color:rgba(15,15,15,.55);font-weight:850}
-    .subBtn .right{font-weight:950;color:rgba(11,61,46,.85);opacity:.8}
-    .sheetFoot{
-      padding:12px 14px;
-      border-top:1px solid var(--line);
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
       flex-wrap:wrap;
-      background:#fff;
+      background:rgba(255,255,255,.04);
+    }
+    .links{
+      display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+      color:rgba(255,255,255,.86);
+      font-weight:850;
+      font-size:12px;
+    }
+    .links a{opacity:.95;text-decoration:underline;text-underline-offset:3px}
+    .status{
+      font-size:12px;
+      font-weight:850;
+      color:rgba(255,255,255,.78);
     }
 
-    /* Mobile */
-    @media (max-width: 820px){
-      .dash{grid-template-columns:repeat(2, minmax(0, 1fr))}
-    }
-    @media (max-width: 420px){
-      .dash{grid-template-columns:1fr}
-      .brandText span{display:none}
+    /* Mobile tweaks */
+    @media (min-width: 860px){
+      .dashGrid{grid-template-columns:repeat(4, minmax(0,1fr))}
+      .subGrid{grid-template-columns:repeat(3, minmax(0,1fr))}
     }
   </style>
 </head>
 
 <body>
-  <!-- TOP BAR -->
+  <!-- Top bar -->
   <div class="topbar">
     <div class="inner">
       <div class="brand">
@@ -273,72 +269,138 @@
             <path d="M8.3 12h6.9l-2.2-2.2 1.3-1.3 4.4 4.4-4.4 4.4-1.3-1.3 2.2-2.2H8.3V12z" fill="#F4B41A"/>
           </svg>
         </div>
-        <div class="brandText">
-          <b>AGEx</b>
-          <span>Grand Plaza • Life Operating System</span>
+        <div class="brandTitle">
+          <b>AGEx</b><br/>
+          <span class="sub">Grand Plaza • App</span>
         </div>
       </div>
 
       <div class="actions">
-        <button class="btn small" id="shareBtn" type="button" title="Share">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M16 8a3 3 0 1 0-2.9-3.7L8.9 6.7a3 3 0 1 0 0 10.6l4.2 2.4A3 3 0 1 0 14 18l-4.5-2.6a3 3 0 0 0 0-6.8L14 6a3 3 0 0 0 2 2z" stroke="rgba(15,15,15,.75)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Share
-        </button>
-
-        <button class="btn gold small" id="installBtn" style="display:none" type="button">Install</button>
-
-        <button class="btn small" id="signOutBtn" type="button" title="Sign out">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M10 7V6a2 2 0 0 1 2-2h7v16h-7a2 2 0 0 1-2-2v-1" stroke="rgba(15,15,15,.75)" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M4 12h10m0 0-3-3m3 3-3 3" stroke="rgba(11,61,46,.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Sign out
-        </button>
+        <button class="btn" id="shareBtn" type="button">Share</button>
+        <button class="btn gold" id="installBtn" type="button" style="display:none">Install</button>
+        <button class="btn" id="signOutBtn" type="button">Sign out</button>
       </div>
     </div>
   </div>
 
-  <main class="wrap">
+  <div class="wrap">
 
-    <!-- DOMAIN GRID (buttons only) -->
-    <section class="panel" aria-label="AGEx domains">
-      <div class="dash" id="domainGrid"></div>
+    <!-- Dashboard (2/3-ish) -->
+    <section class="panel dashPanel" aria-label="AGEx domains dashboard">
+      <div id="dashView">
+        <div class="dashGrid">
+
+          <!-- FINANCE -->
+          <button class="domainBtn" type="button" data-domain="finance">
+            <div class="domainTop">
+              <div class="domainName">Finance</div>
+              <div class="chev">›</div>
+            </div>
+            <div class="domainHint">Smart Money Hub • Income Streams Lab • BigSharks</div>
+          </button>
+
+          <!-- HOME -->
+          <button class="domainBtn" type="button" data-domain="home">
+            <div class="domainTop">
+              <div class="domainName">Home</div>
+              <div class="chev">›</div>
+            </div>
+            <div class="domainHint">Steward’s Charter • HomExecutive</div>
+          </button>
+
+          <!-- MARKETPLACE -->
+          <button class="domainBtn" type="button" data-domain="marketplace">
+            <div class="domainTop">
+              <div class="domainName">Marketplace</div>
+              <div class="chev">›</div>
+            </div>
+            <div class="domainHint">Arin’s Global Marketplace</div>
+          </button>
+
+          <!-- EXCHANGE LIFE -->
+          <button class="domainBtn" type="button" data-domain="exchange">
+            <div class="domainTop">
+              <div class="domainName">Exchange Life</div>
+              <div class="chev">›</div>
+            </div>
+            <div class="domainHint">Kingdom MTT 6:33</div>
+          </button>
+
+          <!-- MEDIA -->
+          <button class="domainBtn" type="button" data-domain="media">
+            <div class="domainTop">
+              <div class="domainName">Media</div>
+              <div class="chev">›</div>
+            </div>
+            <div class="domainHint">iService (Media/IT)</div>
+          </button>
+
+          <!-- LOGISTICS -->
+          <button class="domainBtn" type="button" data-domain="logistics">
+            <div class="domainTop">
+              <div class="domainName">Logistics</div>
+              <div class="chev">›</div>
+            </div>
+            <div class="domainHint">Ringo</div>
+          </button>
+
+          <!-- FOUNDATION (COMING SOON) -->
+          <button class="domainBtn" type="button" data-domain="foundation">
+            <div class="domainTop">
+              <div class="domainName">Foundation</div>
+              <div class="chev">›</div>
+            </div>
+            <div class="domainHint">Coming soon</div>
+          </button>
+
+          <!-- EDUCATION (COMING SOON) -->
+          <button class="domainBtn" type="button" data-domain="education">
+            <div class="domainTop">
+              <div class="domainName">Education</div>
+              <div class="chev">›</div>
+            </div>
+            <div class="domainHint">Coming soon</div>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Sub-screen -->
+      <div class="subPanel" id="subView">
+        <div class="subHead">
+          <button class="btn" id="backBtn" type="button">‹ Back</button>
+          <b id="subTitle">Domain</b>
+          <button class="btn" id="openNewTabBtnTop" type="button">Open</button>
+        </div>
+        <div class="subGrid" id="subGrid"></div>
+      </div>
     </section>
 
-    <!-- FOOTER (bottom quarter) -->
-    <section class="panel" aria-label="Support and policies">
-      <div class="foot">
-        <div style="display:flex;gap:14px;flex-wrap:wrap">
-          <a href="support.html">Support</a>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
+    <!-- Viewer (bottom area) -->
+    <section class="panel viewerPanel" aria-label="Display area">
+      <div class="viewerTop">
+        <div class="viewerTitle">
+          <b id="viewerTitle">Welcome</b>
+          <span id="viewerSub">Select a domain to begin.</span>
         </div>
-        <small>© <span id="yr"></span> AGEx</small>
+        <div class="viewerBtns">
+          <button class="btn" id="refreshBtn" type="button">Refresh</button>
+          <button class="btn" id="openNewTabBtn" type="button">Open</button>
+        </div>
       </div>
+      <iframe id="frame" title="AGEx Viewer"></iframe>
     </section>
 
-  </main>
-
-  <!-- SECOND SCREEN (SUB-BUTTONS) -->
-  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Domain details">
-    <div class="sheet">
-      <div class="sheetHead">
-        <div class="sheetTitle">
-          <b id="sheetName">Domain</b>
-          <span id="sheetSub">Choose a district</span>
-        </div>
-        <button class="btn" id="closeSheet" type="button">Close</button>
+    <!-- Footer: policies + support -->
+    <section class="panel footerPanel" aria-label="Footer links">
+      <div class="links">
+        <a href="support.html" target="_blank" rel="noopener">Support</a>
+        <a href="privacy.html" target="_blank" rel="noopener">Privacy</a>
+        <a href="terms.html" target="_blank" rel="noopener">Terms</a>
       </div>
+      <div class="status" id="statusText">Signed in required for member areas.</div>
+    </section>
 
-      <div class="sheetBody" id="sheetBody"></div>
-
-      <div class="sheetFoot">
-        <button class="btn" id="openDomainHome" type="button" style="display:none">Open domain page</button>
-        <button class="btn gold" id="openSelected" type="button" style="display:none">Open selected</button>
-      </div>
-    </div>
   </div>
 
   <!-- Supabase -->
@@ -346,219 +408,214 @@
   <script src="supabase.js"></script>
 
   <script>
-    // ========= 0) AUTH GUARD =========
+    // =========================
+    // 1) AUTH GUARD
+    // =========================
     (async function(){
       try{
         const { data } = await supabaseClient.auth.getSession();
         const session = data?.session;
+
         if(!session){
           location.href = "auth.html";
           return;
         }
+
+        // Keep this page in sync if auth changes
+        supabaseClient.auth.onAuthStateChange((_event, newSession) => {
+          if(!newSession){
+            location.href = "auth.html";
+          }
+        });
+
       }catch(e){
-        // If anything fails, fail-closed to auth
+        // If anything fails, push to auth to be safe
         location.href = "auth.html";
-        return;
       }
     })();
 
-    // ========= 1) DATA MODEL (Domains -> Sub-buttons) =========
-    // NOTE: Grand Plaza removed because the app IS the plaza.
-    const DOMAINS = [
-      {
-        key: "finance",
-        name: "Finance",
-        sub: "Stewardship money systems",
-        icon: "💰",
+    // =========================
+    // 2) DOMAIN + SUB-PAGES MAP
+    // =========================
+    const DOMAINS = {
+      finance: {
+        title: "Finance",
         items: [
-          { label: "Smart Money Hub", note: "Academy", url: "https://charlesarin101.github.io/agexsmartmoneyhub/" },
-          { label: "Income Streams Lab", note: "Lab", url: "https://charlesarin101.github.io/Income_streams_lab/" },
-          { label: "BigSharks", note: "Project", url: "https://charlesarin1-creator.github.io/bigsharks-site/" }
+          { title:"Smart Money Hub", tag:"Academy", url:"https://charlesarin101.github.io/agexsmartmoneyhub/" },
+          { title:"Income Streams Lab", tag:"Lab", url:"https://charlesarin101.github.io/Income_streams_lab/" },
+          { title:"BigSharks", tag:"Project", url:"https://charlesarin1-creator.github.io/bigsharks-site/" }
         ]
       },
-      {
-        key: "home",
-        name: "Home",
-        sub: "Family, home, household systems",
-        icon: "🏠",
+      home: {
+        title: "Home",
         items: [
-          { label: "HomExecutive", note: "Home solutions", url: "https://charlesarin1-creator.github.io/HomExecutive/" },
-          { label: "The Steward’s Charter", note: "Family finance charter", url: "https://charlesarin101.github.io/the-stewards-charter/" }
+          { title:"The Steward’s Charter", tag:"Home/Family", url:"https://charlesarin101.github.io/the-stewards-charter/" },
+          { title:"HomExecutive", tag:"Home Services", url:"https://charlesarin1-creator.github.io/HomExecutive/" }
         ]
       },
-      {
-        key: "marketplace",
-        name: "Marketplace",
-        sub: "Store and exchange",
-        icon: "🛒",
+      marketplace: {
+        title: "Marketplace",
         items: [
-          { label: "Arin’s Global Marketplace", note: "Store", url: "https://selfany.com/s/arinsglobalmarketplace" }
+          { title:"Arin’s Global Marketplace", tag:"Store", url:"https://selfany.com/s/arinsglobalmarketplace" }
         ]
       },
-      {
-        key: "media",
-        name: "Media / IT",
-        sub: "Tools, media, systems",
-        icon: "🖥️",
+      exchange: {
+        title: "Exchange Life",
         items: [
-          { label: "iService.com", note: "Media/IT platform", url: "https://charlesarin1-creator.github.io/iservice.com/" }
+          { title:"Kingdom MTT 6:33", tag:"Life / Encounters", url:"https://charlesarin1-creator.github.io/Kingdom-mtt633/" }
         ]
       },
-      {
-        key: "logistics",
-        name: "Logistics",
-        sub: "Delivery, logistics, supply",
-        icon: "🚚",
+      media: {
+        title: "Media",
         items: [
-          { label: "Ringo.com", note: "Water & logistics", url: "https://charlesarin1-creator.github.io/Ringo.com/" }
+          { title:"iService", tag:"Media/IT", url:"https://charlesarin1-creator.github.io/iservice.com/" }
         ]
       },
-      {
-        key: "education",
-        name: "Education",
-        sub: "Learning and schooling",
-        icon: "🎓",
+      logistics: {
+        title: "Logistics",
         items: [
-          { label: "Christian Child Academy", note: "Education", url: "https://charlesarin101.github.io/christianchildacademy_zaria/" }
+          { title:"Ringo", tag:"Logistics", url:"https://charlesarin1-creator.github.io/Ringo.com/" }
         ]
       },
-      {
-        key: "exchange_life",
-        name: "Exchange Life",
-        sub: "Encounters & transformation",
-        icon: "✨",
+      foundation: {
+        title: "Foundation",
         items: [
-          { label: "Kingdom MTT 6:33", note: "Spiritual resources", url: "https://charlesarin1-creator.github.io/Kingdom-mtt633/" }
+          { title:"Coming Soon", tag:"Foundation", url:"coming-soon.html" }
         ]
       },
-      {
-        key: "foundation",
-        name: "Foundation",
-        sub: "Giving & future programs",
-        icon: "🏛️",
+      education: {
+        title: "Education",
         items: [
-          { label: "Coming Soon", note: "Foundation hub is being built", url: "" }
+          { title:"Coming Soon", tag:"Education", url:"coming-soon.html" }
         ]
       }
-    ];
+    };
 
-    // ========= 2) RENDER GRID =========
-    const grid = document.getElementById("domainGrid");
-    const overlay = document.getElementById("overlay");
-    const sheetName = document.getElementById("sheetName");
-    const sheetSub = document.getElementById("sheetSub");
-    const sheetBody = document.getElementById("sheetBody");
+    // =========================
+    // 3) VIEW HELPERS
+    // =========================
+    const dashView = document.getElementById("dashView");
+    const subView  = document.getElementById("subView");
+    const subTitle = document.getElementById("subTitle");
+    const subGrid  = document.getElementById("subGrid");
 
-    let currentDomain = null;
-    let selectedItem = null;
+    const frame = document.getElementById("frame");
+    const viewerTitle = document.getElementById("viewerTitle");
+    const viewerSub = document.getElementById("viewerSub");
 
-    function tileHTML(d){
-      return `
-        <button class="tile" type="button" data-key="${d.key}">
-          <div class="ico" aria-hidden="true" title="${d.name}">
-            <span style="font-size:20px">${d.icon}</span>
-          </div>
-          <div class="meta">
-            <div class="name">${d.name}</div>
-            <div class="sub">${d.sub}</div>
-          </div>
-          <div class="chev">›</div>
-        </button>
-      `;
+    const stateKey = "AGEX_LAST_URL";
+    const stateTitleKey = "AGEX_LAST_TITLE";
+    const stateTagKey = "AGEX_LAST_TAG";
+
+    function setViewer(url, title, tag){
+      frame.src = url;
+      viewerTitle.textContent = title || "AGEx";
+      viewerSub.textContent = (tag ? (tag + " • ") : "") + url;
+      localStorage.setItem(stateKey, url);
+      localStorage.setItem(stateTitleKey, title || "AGEx");
+      localStorage.setItem(stateTagKey, tag || "");
     }
 
-    grid.innerHTML = DOMAINS.map(tileHTML).join("");
+    function openCurrent(){
+      const url = frame.src || localStorage.getItem(stateKey);
+      if(url) window.open(url, "_blank", "noopener");
+    }
 
-    // ========= 3) OPEN DOMAIN SHEET =========
-    function openSheet(domain){
-      currentDomain = domain;
-      selectedItem = null;
+    function showSub(domainKey){
+      const domain = DOMAINS[domainKey];
+      if(!domain) return;
 
-      sheetName.textContent = domain.name;
-      sheetSub.textContent = "Choose a district";
+      // Build sub buttons
+      subGrid.innerHTML = "";
+      subTitle.textContent = domain.title;
 
-      sheetBody.innerHTML = domain.items.map((it, idx) => {
-        const disabled = !it.url;
-        return `
-          <button class="subBtn" type="button" data-idx="${idx}" ${disabled ? "disabled style='opacity:.55;cursor:not-allowed'" : ""}>
-            <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
-              <b>${it.label}</b>
-              <span>${it.note || ""}</span>
-            </div>
-            <div class="right">${disabled ? "…" : "›"}</div>
-          </button>
+      domain.items.forEach(item=>{
+        const btn = document.createElement("button");
+        btn.className = "subBtn";
+        btn.type = "button";
+        btn.innerHTML = `
+          <div>${item.title}</div>
+          <span class="subTag">${item.tag || ""}</span>
         `;
-      }).join("");
+        btn.addEventListener("click", ()=>{
+          setViewer(item.url, item.title, item.tag);
+        });
+        subGrid.appendChild(btn);
+      });
 
-      document.getElementById("openDomainHome").style.display = "none";
-      document.getElementById("openSelected").style.display = "none";
-
-      overlay.style.display = "flex";
+      dashView.style.display = "none";
+      subView.style.display = "block";
     }
 
-    function closeSheet(){
-      overlay.style.display = "none";
-      currentDomain = null;
-      selectedItem = null;
+    function showDash(){
+      subView.style.display = "none";
+      dashView.style.display = "block";
     }
 
-    grid.addEventListener("click", (e) => {
-      const btn = e.target.closest("button.tile[data-key]");
-      if(!btn) return;
-      const key = btn.getAttribute("data-key");
-      const domain = DOMAINS.find(d => d.key === key);
-      if(domain) openSheet(domain);
+    // Dashboard click
+    document.querySelectorAll(".domainBtn[data-domain]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const key = btn.getAttribute("data-domain");
+        showSub(key);
+      });
     });
 
-    document.getElementById("closeSheet").addEventListener("click", closeSheet);
-    overlay.addEventListener("click", (e) => {
-      if(e.target === overlay) closeSheet();
+    // Back
+    document.getElementById("backBtn").addEventListener("click", showDash);
+
+    // Viewer controls
+    document.getElementById("openNewTabBtn").addEventListener("click", openCurrent);
+    document.getElementById("openNewTabBtnTop").addEventListener("click", openCurrent);
+    document.getElementById("refreshBtn").addEventListener("click", ()=>{
+      try{ frame.contentWindow.location.reload(); }catch(e){ frame.src = frame.src; }
     });
 
-    // Select sub item
-    sheetBody.addEventListener("click", (e) => {
-      const b = e.target.closest("button.subBtn[data-idx]");
-      if(!b || !currentDomain) return;
+    // Restore last viewed
+    (function restore(){
+      const lastUrl = localStorage.getItem(stateKey);
+      if(lastUrl){
+        setViewer(
+          lastUrl,
+          localStorage.getItem(stateTitleKey) || "AGEx",
+          localStorage.getItem(stateTagKey) || ""
+        );
+      }
+    })();
 
-      const idx = Number(b.getAttribute("data-idx"));
-      const item = currentDomain.items[idx];
-      if(!item?.url) return;
-
-      selectedItem = item;
-      // highlight selection
-      [...sheetBody.querySelectorAll(".subBtn")].forEach(x => x.style.borderColor = "rgba(15,15,15,.10)");
-      b.style.borderColor = "rgba(244,180,26,.70)";
-
-      document.getElementById("openSelected").style.display = "inline-flex";
-    });
-
-    document.getElementById("openSelected").addEventListener("click", () => {
-      if(!selectedItem?.url) return;
-      window.open(selectedItem.url, "_blank", "noopener");
-    });
-
-    // ========= 4) SHARE BUTTON =========
-    const APP_URL = location.href; // shares current URL (works for PWA + browser)
-    document.getElementById("shareBtn").addEventListener("click", async () => {
-      const shareData = {
-        title: "AGEx Grand Plaza",
-        text: "AGEx — a life operating system. Install and navigate by domains.",
-        url: APP_URL
-      };
-
-      try{
-        if(navigator.share){
-          await navigator.share(shareData);
-        }else{
-          await navigator.clipboard.writeText(APP_URL);
-          alert("Link copied.");
+    // =========================
+    // 4) SHARE BUTTON
+    // =========================
+    document.getElementById("shareBtn").addEventListener("click", async ()=>{
+      const url = location.href;
+      if(navigator.share){
+        try{
+          await navigator.share({
+            title: "AGEx Grand Plaza",
+            text: "AGEx — a life operating system. Install it and explore the domains.",
+            url
+          });
+        }catch(e){}
+      }else{
+        try{
+          await navigator.clipboard.writeText(url);
+          alert("Link copied to clipboard.");
+        }catch(e){
+          prompt("Copy this link:", url);
         }
-      }catch(e){
-        // user cancelled
       }
     });
 
-    // ========= 5) INSTALL BUTTON (PWA) =========
+    // =========================
+    // 5) SIGN OUT
+    // =========================
+    document.getElementById("signOutBtn").addEventListener("click", async ()=>{
+      try{ await supabaseClient.auth.signOut(); }catch(e){}
+      location.href = "auth.html";
+    });
+
+    // =========================
+    // 6) PWA INSTALL BUTTON
+    // =========================
     let deferredPrompt = null;
     const installBtn = document.getElementById("installBtn");
 
@@ -576,26 +633,12 @@
       installBtn.style.display = "none";
     });
 
-    // ========= 6) SIGN OUT =========
-    document.getElementById("signOutBtn").addEventListener("click", async () => {
-      try{
-        await supabaseClient.auth.signOut();
-      }catch(e){}
-      location.href = "auth.html";
-    });
-
-    // ========= 7) SERVICE WORKER =========
+    // =========================
+    // 7) SERVICE WORKER
+    // =========================
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
     }
-
-    // Footer year
-    document.getElementById("yr").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
-
-
-
-
-

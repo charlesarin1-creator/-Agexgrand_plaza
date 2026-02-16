@@ -274,6 +274,15 @@
           <span class="sub">Grand Plaza • App</span>
         </div>
       </div>
+      <div id="musicPanel" style="display:flex;align-items:center;gap:10px;">
+  <button id="musicToggle" class="btn ghost" type="button">
+    Activate Plaza Atmosphere
+  </button>
+</div>
+
+<audio id="plazaAudio" loop preload="auto">
+  <source src="assets/plaza-ambient.mp3" type="audio/mpeg">
+</audio>
 
       <div class="actions">
         <button class="btn" id="shareBtn" type="button">Share</button>
@@ -625,6 +634,47 @@
       navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
     }
   </script>
+ <script>
+  const audio = document.getElementById("plazaAudio");
+  const toggle = document.getElementById("musicToggle");
+
+  const MUSIC_KEY = "agex_plaza_music";
+
+  function updateButton(isOn){
+    toggle.textContent = isOn 
+      ? "Mute Plaza Atmosphere" 
+      : "Activate Plaza Atmosphere";
+  }
+
+  function loadPreference(){
+    const saved = localStorage.getItem(MUSIC_KEY);
+    if(saved === "on"){
+      updateButton(true);
+    } else {
+      updateButton(false);
+    }
+  }
+
+  toggle.addEventListener("click", async () => {
+    const current = localStorage.getItem(MUSIC_KEY);
+
+    if(current !== "on"){
+      try{
+        await audio.play();
+        localStorage.setItem(MUSIC_KEY,"on");
+        updateButton(true);
+      }catch(err){
+        alert("Tap again to activate sound (browser requires user interaction).");
+      }
+    }else{
+      audio.pause();
+      localStorage.setItem(MUSIC_KEY,"off");
+      updateButton(false);
+    }
+  });
+
+  loadPreference();
+</script> 
 </body>
 </html>
 
